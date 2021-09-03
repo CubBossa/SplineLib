@@ -32,14 +32,14 @@ public class Rectangle implements Shape {
 	@Override
 	public List<BezierVector> getBezierVectors() {
 		Vector base = pose.getPos();
-		Vector a = pose.getDir().clone().normalize().multiply(sizeX);
-		Vector b = pose.getDir().crossProduct(pose.getUp()).clone().normalize().multiply(sizeY);
+		Vector a = pose.getDir().clone().normalize().multiply(sizeX / 2);
+		Vector b = pose.getDir().crossProduct(pose.getUp()).clone().normalize().multiply(sizeY / 2);
 
 		List<BezierVector> result = new ArrayList<>();
 		result.add(new BezierVector(base.clone().add(a).add(b), null, null));
 		result.add(new BezierVector(base.clone().add(a).subtract(b), null, null));
-		result.add(new BezierVector(base.clone().subtract(a).add(b), null, null));
 		result.add(new BezierVector(base.clone().subtract(a).subtract(b), null, null));
+		result.add(new BezierVector(base.clone().subtract(a).add(b), null, null));
 		return result;
 	}
 }

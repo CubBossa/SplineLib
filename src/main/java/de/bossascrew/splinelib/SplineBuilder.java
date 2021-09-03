@@ -28,6 +28,9 @@ public class SplineBuilder {
 	};
 	private SpacingInterpolator<Map<BezierVector, List<Vector>>, List<Vector>> pointDistanceInterpolator = (points, closedPath) -> {
 		List<Vector> list = new ArrayList<>();
+		if (points == null || points.isEmpty()) {
+			return new ArrayList<>();
+		}
 		points.forEach((bezierVector, vectors) -> list.addAll(vectors));
 		return list;
 	};

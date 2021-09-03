@@ -23,12 +23,14 @@ TODO image controlpoints
 
 Shapes are objects that return a list of BezierVectors. They accept parameters like a pose and a radius. The Pose class
 is a combination of a position vector, a direction vector and an up vector. It defines the position and facing direction
-in 3D space.
+in 3D space. Instead of defining a pose, the Shapes class also provides mathods with a location parameter. The location will
+be interpreted as pose with [0,1,0] as up vector.
 
-Predefines Shapes can be found in the Shapes class:
+Predefined Shapes can be found in the Shapes class:
 
 ```java
 Shapes.rectangle(pose,sizeX,sizeY);
+Shapes.rectangle(location,sizeX,sizeY);
 Shapes.star(pose,spikes,smoothing,innerRadius,outerRadius);
 ```
 

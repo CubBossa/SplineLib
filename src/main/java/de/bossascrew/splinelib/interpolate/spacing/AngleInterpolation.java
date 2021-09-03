@@ -56,7 +56,7 @@ public class AngleInterpolation implements SpacingInterpolator<Map<BezierVector,
 		return result;
 	}
 
-	public double angle(Vector a, Vector b) {
+	public static double angle(Vector a, Vector b) {
 		Vector va = a.clone().normalize();
 		Vector vb = b.clone().normalize();
 		return Math.acos(va.dot(vb));
