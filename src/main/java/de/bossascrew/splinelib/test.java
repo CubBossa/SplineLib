@@ -17,7 +17,6 @@ public class test {
 		JFrame frmMain = new JFrame();
 		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
 		frmMain.add(new Panel(new SplineBuilder(Shapes.star(new Pose(
 				new Vector(200, 200, 200),
 				new Vector(1, 0, 0),

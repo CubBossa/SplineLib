@@ -43,6 +43,7 @@ public class SplineBuilder {
 
 	public SplineBuilder(Shape shape) {
 		this.baseVectors = shape.getBezierVectors();
+		this.closePath = shape.isPathClosedByDefault();
 	}
 
 	public SplineBuilder withRoundingInterpolator(RoundingInterpolator<List<BezierVector>, Map<BezierVector, List<Vector>>> roundingInterpolator) {

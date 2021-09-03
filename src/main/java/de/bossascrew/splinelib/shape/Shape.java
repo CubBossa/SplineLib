@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface Shape {
 
+	boolean isPathClosedByDefault();
+
 	/**
 	 * @return the pose consisting of position, direction and up vector
 	 */

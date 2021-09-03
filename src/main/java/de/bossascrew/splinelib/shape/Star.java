@@ -33,6 +33,11 @@ public class Star implements Shape {
 	}
 
 	@Override
+	public boolean isPathClosedByDefault() {
+		return true;
+	}
+
+	@Override
 	public Pose getPose() {
 		return pose;
 	}
