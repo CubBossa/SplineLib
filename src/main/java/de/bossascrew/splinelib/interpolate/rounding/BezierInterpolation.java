@@ -5,10 +5,12 @@ import de.bossascrew.splinelib.util.BezierUtils;
 import de.bossascrew.splinelib.util.BezierVector;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-public class BezierInterpolation implements RoundingInterpolator<BezierVector, List<Vector>> {
+public class BezierInterpolation implements RoundingInterpolator<List<BezierVector>, Map<BezierVector, List<Vector>>> {
 
 	private final int sampling;
 
@@ -23,9 +25,9 @@ public class BezierInterpolation implements RoundingInterpolator<BezierVector, L
 	}
 
 	@Override
-	public List<List<Vector>> interpolate(List<BezierVector> points, boolean closedPath) {
+	public Map<BezierVector, List<Vector>> interpolate(List<BezierVector> points, boolean closedPath) {
 
-		List<List<Vector>> result = new ArrayList<>();
+		Map<BezierVector, List<Vector>> result = new LinkedHashMap<>();
 
 		for (int i = 0; i < points.size() + (closedPath ? 0 : -1); i++) {
 			List<Vector> innerResult;
@@ -49,7 +51,7 @@ public class BezierInterpolation implements RoundingInterpolator<BezierVector, L
 			if (i == points.size() + (closedPath ? -1 : -2)) {
 				innerResult.add(pointB.toVector());
 			}
-			result.add(innerResult);
+			result.put(pointA, innerResult);
 		}
 		return result;
 	}

@@ -5,10 +5,9 @@ import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
 import de.bossascrew.splinelib.util.BezierVector;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class LinearInterpolation implements RoundingInterpolator<BezierVector, List<Vector>> {
+public class LinearInterpolation implements RoundingInterpolator<List<BezierVector>, Map<BezierVector, List<Vector>>> {
 
 	private final double distance;
 
@@ -22,10 +21,10 @@ public class LinearInterpolation implements RoundingInterpolator<BezierVector, L
 	}
 
 	@Override
-	public List<List<Vector>> interpolate(List<BezierVector> points, boolean closedPath) {
+	public Map<BezierVector, List<Vector>> interpolate(List<BezierVector> points, boolean closedPath) {
 		Preconditions.checkArgument(!points.isEmpty());
 
-		List<List<Vector>> result = new ArrayList<>();
+		Map<BezierVector, List<Vector>> result = new LinkedHashMap<>();
 		for (int i = 0; i < points.size() + (closedPath ? 0 : -1); i++) {
 			BezierVector left = points.get(i);
 			BezierVector right = points.get(closedPath && i == points.size() - 1 ? 0 : i + 1);
@@ -35,10 +34,10 @@ public class LinearInterpolation implements RoundingInterpolator<BezierVector, L
 
 			double dirLength = dir.length();
 			for (double dst = 0; dst < dirLength; dst += distance) {
-				Vector lerped = left.clone().add(dir.multiply(dst / dirLength));
+				Vector lerped = left.clone().add(dir.clone().multiply(dst / dirLength));
 				innerResult.add(lerped);
 			}
-			result.add(innerResult);
+			result.put(left, innerResult);
 		}
 		return result;
 	}
