@@ -1,9 +1,9 @@
 package de.bossascrew.splinelib.interpolate;
 
-import de.bossascrew.splinelib.interpolate.attribute.EquidistantInterpolation;
-import de.bossascrew.splinelib.interpolate.attribute.NaturalInterpolation;
-import de.bossascrew.splinelib.interpolate.type.BezierInterpolation;
-import de.bossascrew.splinelib.interpolate.type.LinearInterpolation;
+import de.bossascrew.splinelib.interpolate.spacing.EquidistantInterpolation;
+import de.bossascrew.splinelib.interpolate.spacing.NaturalInterpolation;
+import de.bossascrew.splinelib.interpolate.rounding.BezierInterpolation;
+import de.bossascrew.splinelib.interpolate.rounding.LinearInterpolation;
 
 public class Interpolation {
 

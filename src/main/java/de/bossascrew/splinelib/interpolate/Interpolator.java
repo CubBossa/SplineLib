@@ -16,5 +16,5 @@ public interface Interpolator<B, V> {
 	 * @param points sample points. Depending on the interpolation algorithm, more or less sample points are necessary
 	 * @return returns a list of interpolated points
 	 */
-	List<V> interpolate(List<B> points);
+	List<V> interpolate(List<B> points, boolean closedPath);
 }

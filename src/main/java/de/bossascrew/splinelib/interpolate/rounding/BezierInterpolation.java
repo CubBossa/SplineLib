@@ -1,6 +1,6 @@
-package de.bossascrew.splinelib.interpolate.type;
+package de.bossascrew.splinelib.interpolate.rounding;
 
-import de.bossascrew.splinelib.interpolate.PathInterpolator;
+import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
 import de.bossascrew.splinelib.util.BezierUtils;
 import de.bossascrew.splinelib.util.BezierVector;
 import org.bukkit.util.Vector;
@@ -8,7 +8,7 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BezierInterpolation implements PathInterpolator<BezierVector, List<Vector>> {
+public class BezierInterpolation implements RoundingInterpolator<BezierVector, List<Vector>> {
 
 	private final int sampling;
 
@@ -20,11 +20,6 @@ public class BezierInterpolation implements PathInterpolator<BezierVector, List<
 	 */
 	public BezierInterpolation(int sampling) {
 		this.sampling = sampling;
-	}
-
-	@Override
-	public List<List<Vector>> interpolate(List<BezierVector> points) {
-		return interpolate(points, false);
 	}
 
 	@Override
@@ -47,8 +42,12 @@ public class BezierInterpolation implements PathInterpolator<BezierVector, List<
 				if (pointB.getLeftControlPoint() == null) {
 					innerResult = BezierUtils.getBezierCurve(sampling, pointA, pointB, pointA.getRightControlPoint());
 				} else {
-					innerResult = BezierUtils.getBezierCurve(sampling, pointA, pointA.getRightControlPoint(), pointB, pointB.getLeftControlPoint());
+					innerResult = BezierUtils.getBezierCurve(sampling, pointA, pointB, pointA.getRightControlPoint(), pointB.getLeftControlPoint());
 				}
+			}
+			//adding last point to achieve closed path.
+			if (i == points.size() + (closedPath ? -1 : -2)) {
+				innerResult.add(pointB.toVector());
 			}
 			result.add(innerResult);
 		}

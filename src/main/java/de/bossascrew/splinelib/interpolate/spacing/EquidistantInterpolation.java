@@ -1,13 +1,13 @@
-package de.bossascrew.splinelib.interpolate.attribute;
+package de.bossascrew.splinelib.interpolate.spacing;
 
 import com.google.common.base.Preconditions;
-import de.bossascrew.splinelib.interpolate.Interpolator;
+import de.bossascrew.splinelib.interpolate.SpacingInterpolator;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EquidistantInterpolation implements Interpolator<List<Vector>, Vector> {
+public class EquidistantInterpolation implements SpacingInterpolator<List<Vector>, Vector> {
 
 	private final double spacing;
 
@@ -16,7 +16,7 @@ public class EquidistantInterpolation implements Interpolator<List<Vector>, Vect
 	}
 
 	@Override
-	public List<Vector> interpolate(List<List<Vector>> points) {
+	public List<Vector> interpolate(List<List<Vector>> points, boolean closedPath) {
 		Preconditions.checkArgument(!points.isEmpty());
 
 		List<Vector> combined = new ArrayList<>();
@@ -27,8 +27,8 @@ public class EquidistantInterpolation implements Interpolator<List<Vector>, Vect
 		Vector prevPoint = combined.get(0);
 		double distanceLastEvenPoint = 0;
 
-		for (int i = 1; i < combined.size() - 1; i++) {
-			Vector pointOnCurve = combined.get(i);
+		for (int i = 1; i < combined.size() + (closedPath ? 1 : 0); i++) {
+			Vector pointOnCurve = combined.get(i == combined.size() ? 0 : i);
 			distanceLastEvenPoint += prevPoint.distance(pointOnCurve);
 
 			while (distanceLastEvenPoint >= spacing) {

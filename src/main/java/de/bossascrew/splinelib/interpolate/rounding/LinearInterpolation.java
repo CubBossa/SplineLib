@@ -1,14 +1,14 @@
-package de.bossascrew.splinelib.interpolate.type;
+package de.bossascrew.splinelib.interpolate.rounding;
 
 import com.google.common.base.Preconditions;
-import de.bossascrew.splinelib.interpolate.PathInterpolator;
+import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
 import de.bossascrew.splinelib.util.BezierVector;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LinearInterpolation implements PathInterpolator<BezierVector, List<Vector>> {
+public class LinearInterpolation implements RoundingInterpolator<BezierVector, List<Vector>> {
 
 	private final double distance;
 
@@ -19,11 +19,6 @@ public class LinearInterpolation implements PathInterpolator<BezierVector, List<
 	 */
 	public LinearInterpolation(double distance) {
 		this.distance = distance;
-	}
-
-	@Override
-	public List<List<Vector>> interpolate(List<BezierVector> points) {
-		return interpolate(points, false);
 	}
 
 	@Override

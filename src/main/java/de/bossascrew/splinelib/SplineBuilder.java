@@ -1,8 +1,8 @@
 package de.bossascrew.splinelib;
 
 import com.google.common.collect.Lists;
-import de.bossascrew.splinelib.interpolate.Interpolator;
-import de.bossascrew.splinelib.interpolate.PathInterpolator;
+import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
+import de.bossascrew.splinelib.interpolate.SpacingInterpolator;
 import de.bossascrew.splinelib.shape.Shape;
 import de.bossascrew.splinelib.util.BezierVector;
 import lombok.Getter;
@@ -21,18 +21,10 @@ public class SplineBuilder {
 	private List<Vector> distancedPath = new ArrayList<>();
 	private List<Vector> processedPath = new ArrayList<>();
 
-	private PathInterpolator<BezierVector, List<Vector>> roundingInterpolator = new PathInterpolator<>() {
-		@Override
-		public List<List<Vector>> interpolate(List<BezierVector> points, boolean closedPath) {
-			return points.stream().map(v -> (List<Vector>) Lists.newArrayList((Vector) v)).toList();
-		}
-
-		@Override
-		public List<List<Vector>> interpolate(List<BezierVector> points) {
-			return interpolate(points, false);
-		}
+	private RoundingInterpolator<BezierVector, List<Vector>> roundingInterpolator = (points, closedPath) -> {
+		return points.stream().map(v -> (List<Vector>) Lists.newArrayList((Vector) v)).toList();
 	};
-	private Interpolator<List<Vector>, Vector> pointDistanceInterpolator = points -> {
+	private SpacingInterpolator<List<Vector>, Vector> pointDistanceInterpolator = (points, closedPath) -> {
 		List<Vector> list = new ArrayList<>();
 		points.forEach(list::addAll);
 		return list;
@@ -50,17 +42,17 @@ public class SplineBuilder {
 		this.baseVectors = shape.getBezierVectors();
 	}
 
-	public SplineBuilder withRoundingInterpolator(PathInterpolator<BezierVector, List<Vector>> roundingInterpolator) {
+	public SplineBuilder withRoundingInterpolator(RoundingInterpolator<BezierVector, List<Vector>> roundingInterpolator) {
 		this.roundingInterpolator = roundingInterpolator;
 		return this;
 	}
 
-	public SplineBuilder withPointDistanceInterpolator(Interpolator<List<Vector>, Vector> pointDistanceInterpolator) {
-		this.pointDistanceInterpolator = pointDistanceInterpolator;
+	public SplineBuilder withSpacingInterpolator(SpacingInterpolator<List<Vector>, Vector> spacingInterpolator) {
+		this.pointDistanceInterpolator = spacingInterpolator;
 		return this;
 	}
 
-	public SplineBuilder withSegmentedPointFilter(Predicate<Vector> pointFilter) {
+	public SplineBuilder withSegmentedPointFilter(BezierVector segmentStart, Predicate<Vector> pointFilter) {
 		return this; //TODO
 	}
 
@@ -77,7 +69,7 @@ public class SplineBuilder {
 	public List<Vector> build() {
 
 		roundedPath = roundingInterpolator.interpolate(baseVectors, closePath);
-		distancedPath = pointDistanceInterpolator.interpolate(roundedPath);
+		distancedPath = pointDistanceInterpolator.interpolate(roundedPath, closePath);
 		if (pointFilter != null) {
 			processedPath = distancedPath.stream().filter(pointFilter).collect(Collectors.toList());
 		} else {
