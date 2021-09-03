@@ -1,9 +1,10 @@
 package de.bossascrew.splinelib.interpolate;
 
-import de.bossascrew.splinelib.interpolate.spacing.EquidistantInterpolation;
-import de.bossascrew.splinelib.interpolate.spacing.NaturalInterpolation;
 import de.bossascrew.splinelib.interpolate.rounding.BezierInterpolation;
 import de.bossascrew.splinelib.interpolate.rounding.LinearInterpolation;
+import de.bossascrew.splinelib.interpolate.spacing.AngleInterpolation;
+import de.bossascrew.splinelib.interpolate.spacing.EquidistantInterpolation;
+import de.bossascrew.splinelib.interpolate.spacing.NaturalInterpolation;
 
 public class Interpolation {
 
@@ -25,5 +26,9 @@ public class Interpolation {
 
 	public static EquidistantInterpolation equidistantInterpolation(double spacing) {
 		return new EquidistantInterpolation(spacing);
+	}
+
+	public static AngleInterpolation angularInterpolation(double angle) {
+		return new AngleInterpolation(angle);
 	}
 }

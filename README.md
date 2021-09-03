@@ -64,12 +64,12 @@ also be your final result to build.
 
 #### Spacing Interpolators
 
-Bezier algorithms have different point spacing depending on the steepness of the curve. To
-achieve equidistant points you will need to use a spacing interpolator as well. The sampling of the bezier algorithm
-defines the smoothness of the curve, while the spacing interpolator only moves points along the sampled curve. Setting a
-very low sample resolution before using space interpolators will lead to results like this:
+Bezier algorithms have different point spacing depending on the steepness of the curve. To achieve equidistant points
+you will need to use a spacing interpolator as well. The sampling of the bezier algorithm defines the smoothness of the
+curve, while the spacing interpolator only moves points along the sampled curve. Setting a very low sample resolution
+before using space interpolators will lead to results like this:
 
-TODO image von sampling
+![Sampling](images/interpolation_sampling.png)
 
 They can be defined by using:
 ```java
@@ -78,9 +78,9 @@ builder.withSpacingInterpolator(Interpolation.equidistantInterpolation(distance)
 
 Interpolator | Description | Example
 --- | --- | ---
-Natural | The natural interpolator divides each segment (from one BezierVector to another) in the given amount of sub-segments. | image
-Equidistant | The equidistant interpolator sets every point with the provided distance to its neighbour points. | image
-Angle | The angular interpolator sets points depending on the steepness of the curve. a straight line will therefore only be visible as a start and end point. | image
+Natural | The natural interpolator divides each segment (from one BezierVector to another) in the given amount of sub-segments. | ![natural](images/interpolation_natural.png)
+Equidistant | The equidistant interpolator sets every point with the provided distance to its neighbour points. | ![equidistant](images/interpolation_equidistant.png)
+Angle | The angular interpolator sets points depending on the steepness of the curve. a straight line will therefore only be visible as a start and end point. | ![angular](images/interpolation_angular.png)
 
 
 ### Closing the path
