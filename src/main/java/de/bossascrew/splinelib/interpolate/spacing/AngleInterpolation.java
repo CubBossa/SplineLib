@@ -47,7 +47,6 @@ public class AngleInterpolation implements SpacingInterpolator<Map<BezierVector,
 				result.add(c2);
 				continue;
 			}
-			System.out.println(angle(lastAddedDir, cDir));
 			if (angle(lastAddedDir, cDir) > angle) {
 				result.add(c1);
 				lastAddedDir = cDir;
