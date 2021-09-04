@@ -1,10 +1,10 @@
 package de.bossascrew.splinelib.phase;
 
-import de.bossascrew.splinelib.Curve;
-import de.bossascrew.splinelib.Spline;
+import de.bossascrew.splinelib.util.Curve;
+import de.bossascrew.splinelib.util.Spline;
 import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
 import de.bossascrew.splinelib.util.BezierVector;
-import org.bukkit.util.Vector;
+import de.bossascrew.splinelib.util.Vector;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

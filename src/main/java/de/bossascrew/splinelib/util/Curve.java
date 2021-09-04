@@ -1,6 +1,4 @@
-package de.bossascrew.splinelib;
-
-import org.bukkit.util.Vector;
+package de.bossascrew.splinelib.util;
 
 import java.util.Collection;
 import java.util.List;

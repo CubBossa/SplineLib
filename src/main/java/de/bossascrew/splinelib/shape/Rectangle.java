@@ -1,12 +1,9 @@
 package de.bossascrew.splinelib.shape;
 
-import de.bossascrew.splinelib.Spline;
+import de.bossascrew.splinelib.util.Spline;
 import de.bossascrew.splinelib.util.BezierVector;
 import de.bossascrew.splinelib.util.Pose;
-import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.List;
+import de.bossascrew.splinelib.util.Vector;
 
 public class Rectangle implements Shape {
 

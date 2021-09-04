@@ -3,7 +3,7 @@ package de.bossascrew.splinelib.util;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.util.Vector;
+import de.bossascrew.splinelib.util.Vector;
 
 @Getter
 @Setter

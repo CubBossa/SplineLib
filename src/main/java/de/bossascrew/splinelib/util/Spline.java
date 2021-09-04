@@ -1,9 +1,8 @@
-package de.bossascrew.splinelib;
+package de.bossascrew.splinelib.util;
 
-import de.bossascrew.splinelib.util.BezierVector;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.util.Vector;
+import de.bossascrew.splinelib.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Collection;

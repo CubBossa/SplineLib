@@ -6,9 +6,11 @@ import de.bossascrew.splinelib.phase.RoundingPhase;
 import de.bossascrew.splinelib.phase.SpacingPhase;
 import de.bossascrew.splinelib.shape.Shape;
 import de.bossascrew.splinelib.util.BezierVector;
+import de.bossascrew.splinelib.util.Curve;
+import de.bossascrew.splinelib.util.Spline;
+import de.bossascrew.splinelib.util.Vector;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.util.Vector;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -19,8 +21,9 @@ import java.util.function.Predicate;
 
 @Setter
 @Getter
-public class CurveBuilder {
+public class CurveBuilder<V> {
 
+	private SplineLib<V> splineLib;
 	private Spline spline;
 
 	private RoundingPhase rounding = new RoundingPhase();
@@ -31,53 +34,57 @@ public class CurveBuilder {
 
 	private Boolean closedPath = null;
 
-	public CurveBuilder(Spline spline) {
+	CurveBuilder(SplineLib<V> splineLib, Spline spline) {
 		this.spline = spline;
+		this.splineLib = splineLib;
 	}
 
-	public CurveBuilder(Shape shape) {
+	CurveBuilder(SplineLib<V> splineLib, Shape shape) {
 		this.spline = shape.getSpline();
+		this.splineLib = splineLib;
 	}
 
-	public CurveBuilder(Collection<BezierVector> vectors) {
+	CurveBuilder(SplineLib<V> splineLib, Collection<BezierVector> vectors) {
 		this.spline = new Spline(vectors);
+		this.splineLib = splineLib;
 	}
 
-	public CurveBuilder(BezierVector... vectors) {
+	CurveBuilder(SplineLib<V> splineLib, BezierVector... vectors) {
 		this.spline = new Spline(List.of(vectors));
+		this.splineLib = splineLib;
 	}
 
-	public CurveBuilder withRoundingInterpolation(RoundingInterpolator<Spline, Map<BezierVector, Curve>> interpolator) {
+	public CurveBuilder<V> withRoundingInterpolation(RoundingInterpolator<Spline, Map<BezierVector, Curve>> interpolator) {
 		this.rounding.setInterpolator(interpolator);
 		return this;
 	}
 
-	public CurveBuilder withRoundingFilter(Predicate<Vector> filter) {
+	public CurveBuilder<V> withRoundingFilter(Predicate<Vector> filter) {
 		this.rounding.setFilter(filter);
 		return this;
 	}
 
-	public CurveBuilder withRoundingProcessor(Consumer<Map<BezierVector, Curve>> processor) {
+	public CurveBuilder<V> withRoundingProcessor(Consumer<Map<BezierVector, Curve>> processor) {
 		this.rounding.setProcessor(processor);
 		return this;
 	}
 
-	public CurveBuilder withSpacingInterpolation(SpacingInterpolator<Map<BezierVector, Curve>, Curve> interpolator) {
+	public CurveBuilder<V> withSpacingInterpolation(SpacingInterpolator<Map<BezierVector, Curve>, Curve> interpolator) {
 		this.spacing.setInterpolator(interpolator);
 		return this;
 	}
 
-	public CurveBuilder withSpacingFilter(Predicate<Vector> filter) {
+	public CurveBuilder<V> withSpacingFilter(Predicate<Vector> filter) {
 		this.spacing.setFilter(filter);
 		return this;
 	}
 
-	public CurveBuilder withSpacingProcessor(Consumer<Curve> processor) {
+	public CurveBuilder<V> withSpacingProcessor(Consumer<Curve> processor) {
 		this.spacing.setProcessor(processor);
 		return this;
 	}
 
-	public CurveBuilder withClosedPath(boolean closedPath) {
+	public CurveBuilder<V> withClosedPath(boolean closedPath) {
 		this.closedPath = closedPath;
 		return this;
 	}
@@ -96,5 +103,9 @@ public class CurveBuilder {
 		runRoundingPhase();
 		runSpacingPhase();
 		return spacedPath;
+	}
+
+	public List<V> buildAndConvert() {
+		return build().stream().map(splineLib.getBackConverter()).toList();
 	}
 }

@@ -1,10 +1,9 @@
 package de.bossascrew.splinelib.interpolate.spacing;
 
-import com.google.common.base.Preconditions;
-import de.bossascrew.splinelib.Curve;
 import de.bossascrew.splinelib.interpolate.SpacingInterpolator;
 import de.bossascrew.splinelib.util.BezierVector;
-import org.bukkit.util.Vector;
+import de.bossascrew.splinelib.util.Curve;
+import de.bossascrew.splinelib.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +25,6 @@ public class NaturalInterpolation implements SpacingInterpolator<Map<BezierVecto
 
 	@Override
 	public Curve interpolate(Map<BezierVector, Curve> points, boolean closedPath) {
-		Preconditions.checkArgument(!points.isEmpty());
 
 		//TODO proper naming for variables
 

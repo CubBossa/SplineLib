@@ -1,12 +1,13 @@
 package de.bossascrew.splinelib.interpolate.rounding;
 
-import com.google.common.base.Preconditions;
-import de.bossascrew.splinelib.Curve;
 import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
 import de.bossascrew.splinelib.util.BezierVector;
-import org.bukkit.util.Vector;
+import de.bossascrew.splinelib.util.Curve;
+import de.bossascrew.splinelib.util.Vector;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LinearInterpolation implements RoundingInterpolator<List<BezierVector>, Map<BezierVector, Curve>> {
 
@@ -23,9 +24,11 @@ public class LinearInterpolation implements RoundingInterpolator<List<BezierVect
 
 	@Override
 	public Map<BezierVector, Curve> interpolate(List<BezierVector> points, boolean closedPath) {
-		Preconditions.checkArgument(!points.isEmpty());
-
 		Map<BezierVector, Curve> result = new LinkedHashMap<>();
+		if (points.isEmpty()) {
+			return result;
+		}
+
 		for (int i = 0; i < points.size() + (closedPath ? 0 : -1); i++) {
 			BezierVector left = points.get(i);
 			BezierVector right = points.get(closedPath && i == points.size() - 1 ? 0 : i + 1);

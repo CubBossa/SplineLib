@@ -4,7 +4,6 @@ import de.bossascrew.splinelib.interpolate.Interpolator;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -13,8 +12,7 @@ import java.util.function.Predicate;
 public abstract class CurveBuilderPhase<C extends Interpolator<I, O>, I, O, V> {
 
 	private C interpolator = null;
-	private @Nullable
-	Predicate<V> filter = null;
+	private Predicate<V> filter = null;
 	private Consumer<O> processor = null;
 
 	public abstract O applyInterpolation(I input, C interpolator, boolean pathClosed);

@@ -1,7 +1,6 @@
-package de.bossascrew.splinelib;
+package de.bossascrew.splinelib.util;
 
-import com.google.common.base.Preconditions;
-import org.bukkit.util.Vector;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,16 +36,18 @@ public abstract class Transformable<E extends Vector, V extends Vector> extends 
 	public Transformable<E, V> mirror(Vector point, Vector v, Vector w) {
 		// check if vectors are similar (v = x * w)
 		Vector toTest = v.clone().normalize();
-		Preconditions.checkArgument(!(w.clone().normalize().equals(toTest) || w.clone().normalize().equals(toTest.multiply(-1))));
+
+		if (!(w.clone().normalize().equals(toTest) || w.clone().normalize().equals(toTest.multiply(-1)))) {
+			throw new IllegalArgumentException("Vectors are similar (v = x * w) and cannot represent a plane.");
+		}
 
 		//TODO
 		return this;
 	}
 
-	public Transformable<E, V> rotate(Vector point, Vector axis, double angle) {
+	public Transformable<E, V> rotate(Vector point, @NonNull Vector axis, double angle) {
 		angle *= 0.01745329;
 
-		Preconditions.checkArgument(axis != null, "The provided axis vector was null");
 		axis = axis.isNormalized() ? axis : axis.normalize();
 
 		double cosTheta = Math.cos(angle);

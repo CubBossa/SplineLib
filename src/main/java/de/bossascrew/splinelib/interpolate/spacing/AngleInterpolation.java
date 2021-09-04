@@ -1,13 +1,11 @@
 package de.bossascrew.splinelib.interpolate.spacing;
 
-import com.google.common.base.Preconditions;
-import de.bossascrew.splinelib.Curve;
 import de.bossascrew.splinelib.interpolate.SpacingInterpolator;
 import de.bossascrew.splinelib.util.BezierVector;
+import de.bossascrew.splinelib.util.Curve;
+import de.bossascrew.splinelib.util.Vector;
 import lombok.Getter;
-import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 @Getter
@@ -32,7 +30,9 @@ public class AngleInterpolation implements SpacingInterpolator<Map<BezierVector,
 		Curve combined = new Curve();
 
 		points.forEach((bezierVector, vectors) -> combined.addAll(vectors));
-		Preconditions.checkArgument(!combined.isEmpty());
+		if (combined.isEmpty()) {
+			return combined;
+		}
 		if (combined.size() == 1) {
 			return new Curve(combined);
 		}

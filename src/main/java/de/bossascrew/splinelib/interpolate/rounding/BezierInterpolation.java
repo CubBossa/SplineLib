@@ -1,14 +1,12 @@
 package de.bossascrew.splinelib.interpolate.rounding;
 
-import de.bossascrew.splinelib.Curve;
-import de.bossascrew.splinelib.Spline;
+import de.bossascrew.splinelib.util.Curve;
+import de.bossascrew.splinelib.util.Spline;
 import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
 import de.bossascrew.splinelib.util.BezierUtils;
 import de.bossascrew.splinelib.util.BezierVector;
-import org.bukkit.util.Vector;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class BezierInterpolation implements RoundingInterpolator<Spline, Map<BezierVector, Curve>> {

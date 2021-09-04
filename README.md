@@ -1,6 +1,7 @@
 # SplineLib
 
-A library for particle path and shape creation in Minecraft
+A library for particle path and shape creation. Work on this library is still in progress! Use classes with caution
+until release 1.0
 
 TODO erklärendes Bild
 
@@ -13,40 +14,60 @@ curves that are defined by any amount of control points. So all those examples a
 
 TODO images
 
-In the context of this library splines are simply lists of BezierVectors. A BezierVector is a child class of Bukkit's
-Vector class and contains two further Vectors: leftControlPoint and rightControlPoint. In order to define Bézier curves
+In the context of this library splines are simply lists of BezierVectors. A BezierVector extends the internal Vector
+class and contains two further Vectors: leftControlPoint and rightControlPoint. In order to define Bézier curves
 controlpoints are obligatory.
 
 TODO image controlpoints
 
 ### Shapes
 
-Shapes are objects that return a list of BezierVectors. They accept parameters like a pose and a radius. The Pose class
-is a combination of a position vector, a direction vector and an up vector. It defines the position and facing direction
-in 3D space. Instead of defining a pose, the Shapes class also provides mathods with a location parameter. The location will
-be interpreted as pose with [0,1,0] as up vector.
+Shapes are objects that are defined by a spline. They accept parameters like a pose and a radius. The Pose class is a
+combination of a position vector, a direction vector and an up vector. It defines the position and facing direction in
+3D space. To get a spline from a shape you can call getSpline() from the Shape interface.
 
 Predefined Shapes can be found in the Shapes class:
 
 ```java
 Shapes.rectangle(pose,sizeX,sizeY);
-Shapes.rectangle(location,sizeX,sizeY);
-Shapes.star(pose,spikes,smoothing,innerRadius,outerRadius);
+		Shapes.rectangle(location,sizeX,sizeY);
+		Shapes.star(pose,spikes,smoothing,innerRadius,outerRadius);
 ```
+
+### Registering the Library
+
+This library is meant to help with path creation in 3D space. This can for example be useful in minecraft development.
+Bukkits Vector/Location classes are needed to spawn particles on a curve. When instantiating the SplineLib class you can
+call the register() method and provide converters for internal vector classes and Bukkit's Vector class for example.
+
+```java
+SplineLib<org.bukkit.util.Vector>splineLib=new SplineLib();
+		splineLib.register(internalFromBukkitVector,internalToBukkitVector,bezierFromBukkitVector,bezierToBukkitVector);
+```
+
+Then you can use the splineLib object to instantiate CurveBuilder objects and to convert Curves to List<
+org.bukkit.util.Vector>
 
 ### Builder
 
 #### Instantiating
 
-The basic way to get a list of vectors from a spline is by using the SplineBuider class. It accepts either a list of
-BezierVectors or a Shape (Presets can be found in Shapes class).
+The basic way to get a list of vectors from a spline is by using the CurveBuider class. It accepts different parameters
+like vectors, splines and shapes (Presets in Shapes class) and can be instantiated by calling
 
 ```java
-SplineBuilder builer = new SplineBuiler(Shapes.star(pose,spikes,smoothing,innerRadius,outerRadius));
+splineLib.newCurveBuilder(Shapes.star(pose,spikes,smoothing,innerRadius,outerRadius))
 ```
 
-The `.build()` method returns a list of vectors. In this case it would simply contain all BezierVectors that were placed
-in the constructor.
+The `.build()` method returns a Curve object. In this case it would simply contain all BezierVectors that were placed in
+the constructor. Curves and Splines extends Transformables and can be rotated and mirrored. You can also
+call `.buildAndTransform()`. SplineLib will automatically convert the built curve by using the registered vector
+converters. By using the other Builder methods you can define and manipulate the outcome of the build method.
+
+A CurveBuilder is designed to build in two phases. First, it will interpolate the roundness of the spline by using the
+defined RoundingInterpolator. It will call the according filtering and processing methods that you have defined in the
+builder. Then it will execute the spacing phase and interpolate the spacing of every point of the curve that was created
+in the first phase. It will as well call filters and processors.
 
 #### Rounding Interpolator
 
@@ -61,40 +82,54 @@ Define it like so:
 builder.withRoundingInterpolator(Interpolation.bezierInterpolation(sampling));
 ```
 
-The sampling parameter defines how many points the interpolator will set. When using the linear interpolator this may
-also be your final result to build.
+The sampling parameter defines how many points the interpolator will create. When using the linear interpolator this may
+also be your final result to build. Linear curve interpolation has a natural spacing interpolation by default.
 
 #### Spacing Interpolators
 
-Bezier algorithms have different point spacing depending on the steepness of the curve. To achieve equidistant points
-you will need to use a spacing interpolator as well. The sampling of the bezier algorithm defines the smoothness of the
-curve, while the spacing interpolator only moves points along the sampled curve. Setting a very low sample resolution
-before using space interpolators will lead to results like this:
+The points that are created by Bezier algorithms are not equidistant by default and vary depending on the steepness of
+the curve. To achieve equidistant points you will need to use a spacing interpolator as well. The sampling of the bezier
+algorithm defines the smoothness of the curve while the spacing interpolator only moves points along the sampled curve.
+Setting a very low sample resolution before using space interpolators will lead to results like this:
 
 ![Sampling](images/interpolation_sampling.png)
 
-They can be defined by using:
+Spcaing interpolators can be defined by calling:
 ```java
 builder.withSpacingInterpolator(Interpolation.equidistantInterpolation(distance));
 ```
 
-Interpolator | Description | Example
+Types | Description | Example
 --- | --- | ---
 Natural | The natural interpolator divides each segment (from one BezierVector to another) in the given amount of sub-segments. | ![natural](images/interpolation_natural.png)
 Equidistant | The equidistant interpolator sets every point with the provided distance to its neighbour points. | ![equidistant](images/interpolation_equidistant.png)
 Angle | The angular interpolator sets points depending on the steepness of the curve. a straight line will therefore only be visible as a start and end point. | ![angular](images/interpolation_angular.png)
 
-
 ### Closing the path
 
-By default, created curves are not closed. You can close the path with
+If a curve is closed or not is defined by its spline. Shaped splines like those from Circles or Stars are closed by
+default. New Splines are not closed by default and have to be closed with
+
+```java
+spline.setClosed(true);
+```
+
+The curve builder also provides a method in case you never had a spline and instantiated a CurveBuilder with a List of
+BezierVectors.
+
 ```java
 builder.withClosedPath(true);
 ```
+
 This will connect start and end point of the spline before interpolating anything.
-Shape based splines instead will be closed if the Shape method `isPathClosedByDefault()`
-is set to true.
 
-### Filters
+### Filters and Processors
 
-TODO
+For each interpolation phase you can provide a point filter. This allows you to filter sample points as well as final
+curve points. You can also use the processor to filter based on actual BezierVectors or if you want to rotate/mirror the
+curve between interpolations.
+```java
+builder
+        .withSpacingFilter(vector -> vector.getY() < 100);
+        .withSpacingProcessor(curve -> curve.mirror(...));
+```

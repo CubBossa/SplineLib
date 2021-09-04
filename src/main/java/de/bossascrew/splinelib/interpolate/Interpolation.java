@@ -1,6 +1,6 @@
 package de.bossascrew.splinelib.interpolate;
 
-import de.bossascrew.splinelib.Curve;
+import de.bossascrew.splinelib.util.Curve;
 import de.bossascrew.splinelib.interpolate.rounding.BezierInterpolation;
 import de.bossascrew.splinelib.interpolate.rounding.LeashInterpolation;
 import de.bossascrew.splinelib.interpolate.rounding.LinearInterpolation;

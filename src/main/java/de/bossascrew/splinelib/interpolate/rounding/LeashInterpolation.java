@@ -1,16 +1,13 @@
 package de.bossascrew.splinelib.interpolate.rounding;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import de.bossascrew.splinelib.Curve;
-import de.bossascrew.splinelib.Spline;
 import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
 import de.bossascrew.splinelib.util.BezierVector;
-import org.bukkit.util.Vector;
+import de.bossascrew.splinelib.util.Curve;
+import de.bossascrew.splinelib.util.Spline;
+import de.bossascrew.splinelib.util.Vector;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LeashInterpolation implements RoundingInterpolator<Spline, Map<BezierVector, Curve>> {
@@ -25,7 +22,7 @@ public class LeashInterpolation implements RoundingInterpolator<Spline, Map<Bezi
 	@Override
 	public Map<BezierVector, Curve> interpolate(Spline points, boolean closedPath) {
 
-		Map<BezierVector, Curve> result = Maps.newLinkedHashMap();
+		Map<BezierVector, Curve> result = new LinkedHashMap<>();
 		if (points.size() == 1) {
 			result.put(points.get(0), new Curve(points.get(0).toVector()));
 			return result;

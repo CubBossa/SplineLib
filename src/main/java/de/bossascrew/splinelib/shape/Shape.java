@@ -1,6 +1,6 @@
 package de.bossascrew.splinelib.shape;
 
-import de.bossascrew.splinelib.Spline;
+import de.bossascrew.splinelib.util.Spline;
 import de.bossascrew.splinelib.util.Pose;
 
 public interface Shape {

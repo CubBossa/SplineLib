@@ -2,8 +2,9 @@ package de.bossascrew.splinelib;
 
 import de.bossascrew.splinelib.interpolate.Interpolation;
 import de.bossascrew.splinelib.shape.Shapes;
+import de.bossascrew.splinelib.util.BezierVector;
 import de.bossascrew.splinelib.util.Pose;
-import org.bukkit.util.Vector;
+import de.bossascrew.splinelib.util.Vector;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,20 +13,25 @@ public class test {
 
 	public static void main(String[] args) {
 
+		SplineLib<int[]> lib = new SplineLib<>();
+		lib.register(ints -> new Vector(ints[0], ints[1], ints[2]),
+				vector -> new int[]{(int) vector.getX(), (int) vector.getY(), (int) vector.getZ()},
+				ints -> new BezierVector(ints[0], ints[1], ints[2], null, null),
+				vector -> new int[]{(int) vector.getX(), (int) vector.getY(), (int) vector.getZ()});
+
 		Pose central = new Pose(new Vector(200, 200, 0), new Vector(1, 0, 0), new Vector(0, 0, 1));
 
 		JFrame frmMain = new JFrame();
 		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		CurveBuilder builder = new CurveBuilder(Shapes.star(central, 5, 20, 90, 150))
-				.withRoundingInterpolation(Interpolation.leashInterpolation(10))
+		CurveBuilder<int[]> builder = lib.newCurveBuilder(Shapes.star(central, 5, 20, 90, 150))
+				.withRoundingInterpolation(Interpolation.bezierInterpolation(10))
 				.withSpacingInterpolation(Interpolation.naturalInterpolation(8))
 				.withClosedPath(true)
-				.withSpacingProcessor(vectors -> vectors.rotate(new Vector(200, 200, 0), new Vector(0, 0, 1), 90));
+				.withSpacingProcessor(vectors -> vectors.rotate(new Vector(200, 200, 0), new Vector(0, 0, 1), 180));
 
-		frmMain.add(new Panel(builder
-		));
 
+		frmMain.add(new Panel<int[]>(builder));
 
 		/*frmMain.add(new Panel(new SplineBuilder(new Oval(new Pose(
 				new Vector(200, 200, 200),
@@ -80,11 +86,11 @@ public class test {
 		frmMain.setVisible(true);
 	}
 
-	public static class Panel extends JPanel {
+	public static class Panel<V> extends JPanel {
 
-		private final CurveBuilder points;
+		private final CurveBuilder<V> points;
 
-		public Panel(CurveBuilder points) {
+		public Panel(CurveBuilder<V> points) {
 			this.points = points;
 			points.build();
 		}
@@ -97,13 +103,13 @@ public class test {
 
 			g2d.setColor(new Color(255, 0, 0));
 			for (Vector p : points.getRoundedPath().keySet()) {
-				g2d.fillOval(p.getBlockX() - 2, p.getBlockY() - 2, 5, 5);
+				g2d.fillOval((int) p.getX() - 2, (int) p.getY() - 2, 5, 5);
 			}
 
 			g2d.setColor(new Color(0, 0, 0));
 			for (Vector p : points.build()) {
 				//g2d.setColor(Color.getHSBColor((float) points.indexOf(p) / points.size() * 255f, 1, 1));
-				g2d.fillOval(p.getBlockX() - 1, p.getBlockY() - 1, 3, 3);
+				g2d.fillOval((int) p.getX() - 1, (int) p.getY() - 1, 3, 3);
 			}
 		}
 

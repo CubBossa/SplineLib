@@ -1,11 +1,11 @@
 package de.bossascrew.splinelib.shape;
 
-import de.bossascrew.splinelib.Spline;
+import de.bossascrew.splinelib.util.Spline;
 import de.bossascrew.splinelib.util.BezierVector;
 import de.bossascrew.splinelib.util.Pose;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.util.Vector;
+import de.bossascrew.splinelib.util.Vector;
 
 @RequiredArgsConstructor
 @Getter

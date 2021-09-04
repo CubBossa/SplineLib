@@ -2,7 +2,6 @@ package de.bossascrew.splinelib.util;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.util.Vector;
 
 public class BezierVector extends Vector {
 

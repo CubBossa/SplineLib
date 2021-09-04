@@ -1,11 +1,7 @@
 package de.bossascrew.splinelib.util;
 
-import de.bossascrew.splinelib.Curve;
 import lombok.experimental.UtilityClass;
-import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.List;
+import de.bossascrew.splinelib.util.Vector;
 
 @UtilityClass
 public class BezierUtils {

@@ -1,9 +1,9 @@
 package de.bossascrew.splinelib.phase;
 
-import de.bossascrew.splinelib.Curve;
+import de.bossascrew.splinelib.util.Curve;
 import de.bossascrew.splinelib.interpolate.SpacingInterpolator;
 import de.bossascrew.splinelib.util.BezierVector;
-import org.bukkit.util.Vector;
+import de.bossascrew.splinelib.util.Vector;
 
 import java.util.Map;
 import java.util.function.Consumer;
