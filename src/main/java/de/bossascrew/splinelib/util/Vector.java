@@ -4,6 +4,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class Vector implements Cloneable {
 
+	public static final Vector ZERO = new Vector(0, 0, 0);
+	public static final Vector ONE = new Vector(1, 1, 1);
+	public static final Vector X = new Vector(1, 0, 0);
+	public static final Vector Y = new Vector(0, 1, 0);
+	public static final Vector Z = new Vector(0, 0, 1);
+
 	private static final double epsilon = 1.0E-6D;
 	protected double x;
 	protected double y;

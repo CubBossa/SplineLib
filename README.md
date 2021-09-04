@@ -30,7 +30,7 @@ Predefined Shapes can be found in the Shapes class:
 
 ```java
 Shapes.rectangle(pose,sizeX,sizeY);
-Shapes.rectangle(location,sizeX,sizeY);
+Shapes.circle(pose,radius);
 Shapes.star(pose,spikes,smoothing,innerRadius,outerRadius);
 ```
 
@@ -38,7 +38,7 @@ Shapes.star(pose,spikes,smoothing,innerRadius,outerRadius);
 
 This library is meant to help with path creation in 3D space. This can for example be useful in minecraft development.
 Bukkits Vector/Location classes are needed to spawn particles on a curve. When instantiating the SplineLib class you can
-call the register() method and provide converters for internal vector classes and Bukkit's Vector class for example.
+call the register() method and provide converters for internal vector classes and Bukkit's Vector class.
 
 ```java
 SplineLib<org.bukkit.util.Vector>splineLib = new SplineLib();
@@ -60,8 +60,8 @@ splineLib.newCurveBuilder(Shapes.star(pose,spikes,smoothing,innerRadius,outerRad
 ```
 
 The `.build()` method returns a Curve object. In this case it would simply contain all BezierVectors that were placed in
-the constructor. Curves and Splines extends Transformables and can be rotated and mirrored. You can also
-call `.buildAndTransform()`. SplineLib will automatically convert the built curve by using the registered vector
+the constructor. Curves and Splines extends Transformables and can be translated, rotated, scaled and mirrored. You can also
+call `.buildAndConvert()`. SplineLib will automatically convert the built curve by using the registered vector
 converters. By using the other Builder methods you can define and manipulate the outcome of the build method.
 
 A CurveBuilder is designed to build in two phases. First, it will interpolate the roundness of the spline by using the
