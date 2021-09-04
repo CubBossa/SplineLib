@@ -5,7 +5,6 @@ import de.bossascrew.splinelib.util.BezierUtils;
 import de.bossascrew.splinelib.util.BezierVector;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

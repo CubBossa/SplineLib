@@ -1,10 +1,8 @@
 package de.bossascrew.splinelib;
 
-import com.google.common.collect.Lists;
 import de.bossascrew.splinelib.interpolate.Interpolation;
-import de.bossascrew.splinelib.shape.Oval;
+import de.bossascrew.splinelib.interpolate.rounding.LeashInterpolation;
 import de.bossascrew.splinelib.shape.Shapes;
-import de.bossascrew.splinelib.util.BezierVector;
 import de.bossascrew.splinelib.util.Pose;
 import org.bukkit.util.Vector;
 
@@ -18,7 +16,7 @@ public class test {
 		JFrame frmMain = new JFrame();
 		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		frmMain.add(new Panel(new SplineBuilder(new Oval(new Pose(
+		/*frmMain.add(new Panel(new SplineBuilder(new Oval(new Pose(
 				new Vector(200, 200, 200),
 				new Vector(0, 1, 0),
 				new Vector(0, 0, 1)), 100, 1.8))
@@ -35,16 +33,20 @@ public class test {
 				.withRoundingInterpolator(Interpolation.bezierInterpolation(10))
 				//.withSpacingInterpolator(Interpolation.angularInterpolation(10))
 				.build()));
+*/
+		long currentMilis = System.currentTimeMillis();
 
 		frmMain.add(new Panel(new SplineBuilder(Shapes.star(new Pose(
 				new Vector(200, 200, 200),
 				new Vector(1, 0, 0),
 				new Vector(0, 0, 1)), 8, 20, 0, 90, 150))
 				.withClosedPath(true)
-				.withRoundingInterpolator(Interpolation.bezierInterpolation(10))
-				.withSpacingInterpolator(Interpolation.angularInterpolation(10))
-				.build()));
+				.withRoundingInterpolator(new LeashInterpolation(30))
+				.withSpacingInterpolator(Interpolation.naturalInterpolation(15))
+				.withRotation(new Vector(200, 200, 200), new Vector(0, 0, 1), 180)
+				));
 
+		/*
 		frmMain.add(new Panel(new SplineBuilder(Lists.newArrayList(
 				new BezierVector(200, 100, 0, new Vector(0, 100, 0), new Vector(400, 100, 0)),
 				new BezierVector(200, 300, 0, new Vector(0, 300, 0), new Vector(400, 300, 0)),
@@ -58,20 +60,20 @@ public class test {
 				new BezierVector(100, 100, 0, null, new Vector(300, 0, 0)),
 				new BezierVector(300, 200, 0, null, null),
 				new BezierVector(100, 300, 0, null, null)))
-				.withRoundingInterpolator(Interpolation.bezierInterpolation(20))
+				.withRoundingInterpolator(new LeashInterpolation(20))
 				.withSpacingInterpolator(Interpolation.equidistantInterpolation(4))
 				.withClosedPath(true)
 				.build()));
-
+*/
 		frmMain.pack();
 		frmMain.setVisible(true);
 	}
 
 	public static class Panel extends JPanel {
 
-		private final List<Vector> points;
+		private final SplineBuilder points;
 
-		public Panel(List<Vector> points) {
+		public Panel(SplineBuilder points) {
 			this.points = points;
 		}
 
@@ -82,14 +84,14 @@ public class test {
 			Graphics2D g2d = (Graphics2D) g;
 
 			g2d.setColor(new Color(255, 0, 0));
-			g2d.fillOval(200, 100, 5, 5);
-			g2d.fillOval(300, 200, 5, 5);
-			g2d.fillOval(200, 300, 5, 5);
+			for (Vector p : points.getBaseVectors()) {
+				g2d.fillOval(p.getBlockX() - 2, p.getBlockY() - 2, 5, 5);
+			}
 
 			g2d.setColor(new Color(0, 0, 0));
-			for (Vector p : points) {
+			for (Vector p : points.build()) {
 				//g2d.setColor(Color.getHSBColor((float) points.indexOf(p) / points.size() * 255f, 1, 1));
-				g2d.fillOval(p.getBlockX(), p.getBlockY(), 3, 3);
+				g2d.fillOval(p.getBlockX() - 1, p.getBlockY() - 1, 3, 3);
 			}
 		}
 

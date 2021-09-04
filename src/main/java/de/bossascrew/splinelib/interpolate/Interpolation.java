@@ -1,6 +1,7 @@
 package de.bossascrew.splinelib.interpolate;
 
 import de.bossascrew.splinelib.interpolate.rounding.BezierInterpolation;
+import de.bossascrew.splinelib.interpolate.rounding.LeashInterpolation;
 import de.bossascrew.splinelib.interpolate.rounding.LinearInterpolation;
 import de.bossascrew.splinelib.interpolate.spacing.AngleInterpolation;
 import de.bossascrew.splinelib.interpolate.spacing.EquidistantInterpolation;
@@ -8,7 +9,7 @@ import de.bossascrew.splinelib.interpolate.spacing.NaturalInterpolation;
 
 public class Interpolation {
 
-	//type
+	//round
 
 	public static LinearInterpolation linearInterpolation(double distance) {
 		return new LinearInterpolation(distance);
@@ -18,7 +19,11 @@ public class Interpolation {
 		return new BezierInterpolation(sampling);
 	}
 
-	//attribute
+	public static LeashInterpolation leashInterpolation(int sampling) {
+		return new LeashInterpolation(sampling);
+	}
+
+	//spacing
 
 	public static NaturalInterpolation naturalInterpolation(int segments) {
 		return new NaturalInterpolation(segments);
