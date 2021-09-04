@@ -30,8 +30,8 @@ Predefined Shapes can be found in the Shapes class:
 
 ```java
 Shapes.rectangle(pose,sizeX,sizeY);
-		Shapes.rectangle(location,sizeX,sizeY);
-		Shapes.star(pose,spikes,smoothing,innerRadius,outerRadius);
+Shapes.rectangle(location,sizeX,sizeY);
+Shapes.star(pose,spikes,smoothing,innerRadius,outerRadius);
 ```
 
 ### Registering the Library
@@ -41,8 +41,8 @@ Bukkits Vector/Location classes are needed to spawn particles on a curve. When i
 call the register() method and provide converters for internal vector classes and Bukkit's Vector class for example.
 
 ```java
-SplineLib<org.bukkit.util.Vector>splineLib=new SplineLib();
-		splineLib.register(internalFromBukkitVector,internalToBukkitVector,bezierFromBukkitVector,bezierToBukkitVector);
+SplineLib<org.bukkit.util.Vector>splineLib = new SplineLib();
+splineLib.register(internalFromBukkitVector,internalToBukkitVector,bezierFromBukkitVector,bezierToBukkitVector);
 ```
 
 Then you can use the splineLib object to instantiate CurveBuilder objects and to convert Curves to List<
