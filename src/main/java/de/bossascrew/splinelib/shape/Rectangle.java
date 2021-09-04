@@ -1,5 +1,6 @@
 package de.bossascrew.splinelib.shape;
 
+import de.bossascrew.splinelib.Spline;
 import de.bossascrew.splinelib.util.BezierVector;
 import de.bossascrew.splinelib.util.Pose;
 import org.bukkit.util.Vector;
@@ -20,22 +21,18 @@ public class Rectangle implements Shape {
 	}
 
 	@Override
-	public boolean isPathClosedByDefault() {
-		return true;
-	}
-
-	@Override
 	public Pose getPose() {
 		return pose;
 	}
 
 	@Override
-	public List<BezierVector> getBezierVectors() {
+	public Spline getSpline() {
 		Vector base = pose.getPos();
 		Vector a = pose.getDir().clone().normalize().multiply(sizeX / 2);
 		Vector b = pose.getDir().crossProduct(pose.getUp()).clone().normalize().multiply(sizeY / 2);
 
-		List<BezierVector> result = new ArrayList<>();
+		Spline result = new Spline();
+		result.setClosed(true);
 		result.add(new BezierVector(base.clone().add(a).add(b), null, null));
 		result.add(new BezierVector(base.clone().add(a).subtract(b), null, null));
 		result.add(new BezierVector(base.clone().subtract(a).subtract(b), null, null));

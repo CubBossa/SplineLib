@@ -1,5 +1,6 @@
 package de.bossascrew.splinelib.shape;
 
+import de.bossascrew.splinelib.Spline;
 import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
 import de.bossascrew.splinelib.interpolate.SpacingInterpolator;
 import de.bossascrew.splinelib.util.BezierVector;
@@ -39,19 +40,15 @@ public class Star implements Shape {
 	}
 
 	@Override
-	public boolean isPathClosedByDefault() {
-		return true;
-	}
-
-	@Override
 	public Pose getPose() {
 		return pose;
 	}
 
 	@Override
-	public List<BezierVector> getBezierVectors() {
+	public Spline getSpline() {
 
-		List<BezierVector> result = new ArrayList<>();
+		Spline result = new Spline();
+		result.setClosed(true);
 		Vector base = pose.getPos();
 
 		Vector a = pose.getDir().clone().normalize();

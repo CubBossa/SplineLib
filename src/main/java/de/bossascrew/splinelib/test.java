@@ -1,20 +1,31 @@
 package de.bossascrew.splinelib;
 
 import de.bossascrew.splinelib.interpolate.Interpolation;
-import de.bossascrew.splinelib.interpolate.rounding.LeashInterpolation;
 import de.bossascrew.splinelib.shape.Shapes;
 import de.bossascrew.splinelib.util.Pose;
 import org.bukkit.util.Vector;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 public class test {
 
 	public static void main(String[] args) {
+
+		Pose central = new Pose(new Vector(200, 200, 0), new Vector(1, 0, 0), new Vector(0, 0, 1));
+
 		JFrame frmMain = new JFrame();
 		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		CurveBuilder builder = new CurveBuilder(Shapes.star(central, 5, 20, 90, 150))
+				.withRoundingInterpolation(Interpolation.leashInterpolation(10))
+				.withSpacingInterpolation(Interpolation.naturalInterpolation(8))
+				.withClosedPath(true)
+				.withSpacingProcessor(vectors -> vectors.rotate(new Vector(200, 200, 0), new Vector(0, 0, 1), 90));
+
+		frmMain.add(new Panel(builder
+		));
+
 
 		/*frmMain.add(new Panel(new SplineBuilder(new Oval(new Pose(
 				new Vector(200, 200, 200),
@@ -34,8 +45,7 @@ public class test {
 				//.withSpacingInterpolator(Interpolation.angularInterpolation(10))
 				.build()));
 */
-		long currentMilis = System.currentTimeMillis();
-
+/*
 		frmMain.add(new Panel(new SplineBuilder(Shapes.star(new Pose(
 				new Vector(200, 200, 200),
 				new Vector(1, 0, 0),
@@ -43,10 +53,11 @@ public class test {
 				.withClosedPath(true)
 				.withRoundingInterpolator(new LeashInterpolation(30))
 				.withSpacingInterpolator(Interpolation.naturalInterpolation(15))
-				.withRotation(new Vector(200, 200, 200), new Vector(0, 0, 1), 180)
+				.withRotation(new Vector(200, 200, 200), new Vector(0, 0, 1), 90)
+				.withRotation(new Vector(200, 200, 200), new Vector(1, 0, 0), 45)
 				));
 
-		/*
+
 		frmMain.add(new Panel(new SplineBuilder(Lists.newArrayList(
 				new BezierVector(200, 100, 0, new Vector(0, 100, 0), new Vector(400, 100, 0)),
 				new BezierVector(200, 300, 0, new Vector(0, 300, 0), new Vector(400, 300, 0)),
@@ -71,10 +82,11 @@ public class test {
 
 	public static class Panel extends JPanel {
 
-		private final SplineBuilder points;
+		private final CurveBuilder points;
 
-		public Panel(SplineBuilder points) {
+		public Panel(CurveBuilder points) {
 			this.points = points;
+			points.build();
 		}
 
 		@Override
@@ -84,7 +96,7 @@ public class test {
 			Graphics2D g2d = (Graphics2D) g;
 
 			g2d.setColor(new Color(255, 0, 0));
-			for (Vector p : points.getBaseVectors()) {
+			for (Vector p : points.getRoundedPath().keySet()) {
 				g2d.fillOval(p.getBlockX() - 2, p.getBlockY() - 2, 5, 5);
 			}
 

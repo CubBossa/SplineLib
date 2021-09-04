@@ -1,11 +1,15 @@
 package de.bossascrew.splinelib.interpolate;
 
+import de.bossascrew.splinelib.Curve;
 import de.bossascrew.splinelib.interpolate.rounding.BezierInterpolation;
 import de.bossascrew.splinelib.interpolate.rounding.LeashInterpolation;
 import de.bossascrew.splinelib.interpolate.rounding.LinearInterpolation;
 import de.bossascrew.splinelib.interpolate.spacing.AngleInterpolation;
 import de.bossascrew.splinelib.interpolate.spacing.EquidistantInterpolation;
 import de.bossascrew.splinelib.interpolate.spacing.NaturalInterpolation;
+import de.bossascrew.splinelib.util.BezierVector;
+
+import java.util.Map;
 
 public class Interpolation {
 
@@ -25,7 +29,7 @@ public class Interpolation {
 
 	//spacing
 
-	public static NaturalInterpolation naturalInterpolation(int segments) {
+	public static SpacingInterpolator<Map<BezierVector, Curve>, Curve> naturalInterpolation(int segments) {
 		return new NaturalInterpolation(segments);
 	}
 

@@ -1,17 +1,17 @@
 package de.bossascrew.splinelib.interpolate.spacing;
 
 import com.google.common.base.Preconditions;
+import de.bossascrew.splinelib.Curve;
 import de.bossascrew.splinelib.interpolate.SpacingInterpolator;
 import de.bossascrew.splinelib.util.BezierVector;
 import lombok.Getter;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @Getter
-public class AngleInterpolation implements SpacingInterpolator<Map<BezierVector, List<Vector>>, List<Vector>> {
+public class AngleInterpolation implements SpacingInterpolator<Map<BezierVector, Curve>, Curve> {
 
 	private final double angle;
 
@@ -26,15 +26,15 @@ public class AngleInterpolation implements SpacingInterpolator<Map<BezierVector,
 	}
 
 	@Override
-	public List<Vector> interpolate(Map<BezierVector, List<Vector>> points, boolean closedPath) {
+	public Curve interpolate(Map<BezierVector, Curve> points, boolean closedPath) {
 
-		List<Vector> result = new ArrayList<>();
-		List<Vector> combined = new ArrayList<>();
+		Curve result = new Curve();
+		Curve combined = new Curve();
 
 		points.forEach((bezierVector, vectors) -> combined.addAll(vectors));
 		Preconditions.checkArgument(!combined.isEmpty());
 		if (combined.size() == 1) {
-			return new ArrayList<>(combined);
+			return new Curve(combined);
 		}
 		combined.add(combined.get(0));
 		Vector lastAddedDir = combined.get(1).clone().subtract(combined.get(0));

@@ -2,6 +2,8 @@ package de.bossascrew.splinelib.interpolate.rounding;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import de.bossascrew.splinelib.Curve;
+import de.bossascrew.splinelib.Spline;
 import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
 import de.bossascrew.splinelib.util.BezierVector;
 import org.bukkit.util.Vector;
@@ -11,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class LeashInterpolation implements RoundingInterpolator<List<BezierVector>, Map<BezierVector, List<Vector>>> {
+public class LeashInterpolation implements RoundingInterpolator<Spline, Map<BezierVector, Curve>> {
 
 	private final int samples;
 
@@ -21,11 +23,11 @@ public class LeashInterpolation implements RoundingInterpolator<List<BezierVecto
 
 
 	@Override
-	public Map<BezierVector, List<Vector>> interpolate(List<BezierVector> points, boolean closedPath) {
+	public Map<BezierVector, Curve> interpolate(Spline points, boolean closedPath) {
 
-		Map<BezierVector, List<Vector>> result = Maps.newLinkedHashMap();
+		Map<BezierVector, Curve> result = Maps.newLinkedHashMap();
 		if (points.size() == 1) {
-			result.put(points.get(0), Lists.newArrayList(points.get(0).toVector()));
+			result.put(points.get(0), new Curve(points.get(0).toVector()));
 			return result;
 		}
 
@@ -41,8 +43,8 @@ public class LeashInterpolation implements RoundingInterpolator<List<BezierVecto
 	/**
 	 * returns parabola for segment between two bezier points
 	 */
-	public List<Vector> getParabolaPoints(Vector start, Vector end) {
-		List<Vector> result = new ArrayList<>();
+	public Curve getParabolaPoints(Vector start, Vector end) {
+		Curve result = new Curve();
 		boolean isStartLower = start.getY() < end.getY();
 		Vector s = isStartLower ? start : end;
 		Vector v = isStartLower ? end : start;

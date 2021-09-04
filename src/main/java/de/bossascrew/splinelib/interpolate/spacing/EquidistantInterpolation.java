@@ -1,15 +1,14 @@
 package de.bossascrew.splinelib.interpolate.spacing;
 
 import com.google.common.base.Preconditions;
+import de.bossascrew.splinelib.Curve;
 import de.bossascrew.splinelib.interpolate.SpacingInterpolator;
 import de.bossascrew.splinelib.util.BezierVector;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-public class EquidistantInterpolation implements SpacingInterpolator<Map<BezierVector, List<Vector>>, List<Vector>> {
+public class EquidistantInterpolation implements SpacingInterpolator<Map<BezierVector, Curve>, Curve> {
 
 	private final double spacing;
 
@@ -18,13 +17,16 @@ public class EquidistantInterpolation implements SpacingInterpolator<Map<BezierV
 	}
 
 	@Override
-	public List<Vector> interpolate(Map<BezierVector, List<Vector>> points, boolean closedPath) {
+	public Curve interpolate(Map<BezierVector, Curve> points, boolean closedPath) {
 		Preconditions.checkArgument(!points.isEmpty());
 
-		List<Vector> combined = new ArrayList<>();
+		Curve combined = new Curve();
 		points.forEach((bezierVector, vectors) -> combined.addAll(vectors));
+		if (combined.isEmpty()) {
+			return combined;
+		}
 
-		List<Vector> result = new ArrayList<>();
+		Curve result = new Curve();
 		result.add(combined.get(0));
 		Vector prevPoint = combined.get(0);
 		double distanceLastEvenPoint = 0;

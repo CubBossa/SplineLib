@@ -1,5 +1,7 @@
 package de.bossascrew.splinelib.interpolate.rounding;
 
+import de.bossascrew.splinelib.Curve;
+import de.bossascrew.splinelib.Spline;
 import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
 import de.bossascrew.splinelib.util.BezierUtils;
 import de.bossascrew.splinelib.util.BezierVector;
@@ -9,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BezierInterpolation implements RoundingInterpolator<List<BezierVector>, Map<BezierVector, List<Vector>>> {
+public class BezierInterpolation implements RoundingInterpolator<Spline, Map<BezierVector, Curve>> {
 
 	private final int sampling;
 
@@ -24,12 +26,12 @@ public class BezierInterpolation implements RoundingInterpolator<List<BezierVect
 	}
 
 	@Override
-	public Map<BezierVector, List<Vector>> interpolate(List<BezierVector> points, boolean closedPath) {
+	public Map<BezierVector, Curve> interpolate(Spline points, boolean closedPath) {
 
-		Map<BezierVector, List<Vector>> result = new LinkedHashMap<>();
+		Map<BezierVector, Curve> result = new LinkedHashMap<>();
 
 		for (int i = 0; i < points.size() + (closedPath ? 0 : -1); i++) {
-			List<Vector> innerResult;
+			Curve innerResult;
 			BezierVector pointA = points.get(i);
 			BezierVector pointB = points.get(closedPath && i == points.size() - 1 ? 0 : i + 1);
 

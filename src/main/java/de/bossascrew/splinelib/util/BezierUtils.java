@@ -1,5 +1,6 @@
 package de.bossascrew.splinelib.util;
 
+import de.bossascrew.splinelib.Curve;
 import lombok.experimental.UtilityClass;
 import org.bukkit.util.Vector;
 
@@ -17,8 +18,8 @@ public class BezierUtils {
 	 * @param pointB Der Schlusspunkt der Gerade
 	 * @return eine Liste aus Vektoren, die auf der Gerade liegen
 	 */
-	public List<Vector> getBezierCurve(int steps, Vector pointA, Vector pointB) {
-		List<Vector> ret = new ArrayList<>();
+	public Curve getBezierCurve(int steps, Vector pointA, Vector pointB) {
+		Curve ret = new Curve();
 
 		Vector AB = pointB.clone().subtract(pointA);
 
@@ -40,8 +41,8 @@ public class BezierUtils {
 	 * @return eine Liste aus Vektoren, die auf der Kurve liegen
 	 * @see <a href="https://javascript.info/bezier-curve">bezier curve</a>
 	 */
-	public List<Vector> getBezierCurve(int steps, Vector pointA, Vector pointB, Vector sharedTangentPoint) {
-		List<Vector> ret = new ArrayList<>();
+	public Curve getBezierCurve(int steps, Vector pointA, Vector pointB, Vector sharedTangentPoint) {
+		Curve ret = new Curve();
 
 		for (int step = 0; step < steps; step++) {
 			double t = (double) step / steps;
@@ -65,8 +66,8 @@ public class BezierUtils {
 	 * @return eine Liste aus Vektoren, die auf der Kurve liegen
 	 * @see <a href="https://javascript.info/bezier-curve">bezier curve</a>
 	 */
-	public List<Vector> getBezierCurve(int steps, Vector pointA, Vector pointB, Vector tangentA, Vector tangentB) {
-		List<Vector> ret = new ArrayList<>();
+	public Curve getBezierCurve(int steps, Vector pointA, Vector pointB, Vector tangentA, Vector tangentB) {
+		Curve ret = new Curve();
 
 		for (int step = 0; step < steps; step++) {
 			double t = (double) step / steps;

@@ -1,13 +1,11 @@
 package de.bossascrew.splinelib.shape;
 
+import de.bossascrew.splinelib.Spline;
 import de.bossascrew.splinelib.util.BezierVector;
 import de.bossascrew.splinelib.util.Pose;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Getter
@@ -19,25 +17,20 @@ public class Oval implements Shape {
 	private final double radius;
 	private final double ratio;
 
-
-	@Override
-	public boolean isPathClosedByDefault() {
-		return true;
-	}
-
 	@Override
 	public Pose getPose() {
 		return pose;
 	}
 
 	@Override
-	public List<BezierVector> getBezierVectors() {
+	public Spline getSpline() {
 
 		Vector b = pose.getPos();
 		Vector d = pose.getDir().clone().normalize();
 		Vector r = d.clone().crossProduct(pose.getUp()).normalize();
 
-		List<BezierVector> result = new ArrayList<>();
+		Spline result = new Spline();
+		result.setClosed(true);
 
 		Vector vUpper = b.clone().add(d.clone().multiply(radius));
 		Vector vLower = b.clone().subtract(d.clone().multiply(radius));
