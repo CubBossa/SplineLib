@@ -1,7 +1,9 @@
 package de.bossascrew.splinelib;
 
+import de.bossascrew.splinelib.interpolate.Interpolator;
 import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
 import de.bossascrew.splinelib.interpolate.SpacingInterpolator;
+import de.bossascrew.splinelib.phase.CurveBuilderPhase;
 import de.bossascrew.splinelib.phase.RoundingPhase;
 import de.bossascrew.splinelib.phase.SpacingPhase;
 import de.bossascrew.splinelib.shape.Shape;
@@ -12,10 +14,7 @@ import de.bossascrew.splinelib.util.Vector;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -106,6 +105,6 @@ public class CurveBuilder<V> {
 	}
 
 	public List<V> buildAndConvert() {
-		return build().stream().map(splineLib.getBackConverter()).toList();
+		return build().stream().map(splineLib::convertVectorBack).toList();
 	}
 }

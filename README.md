@@ -31,9 +31,9 @@ curves that are defined by any amount of control points. So all those examples a
 <img src="images/example_circle.png" width="24%"> <img src="images/example_star.png" width="24%"> <img src="images/example_spline.png" width="24%"> <img src="images/example_spline2.png" width="24%">
 
 
-In the context of this library splines are simply lists of BezierVectors. A BezierVector extends the internal Vector
-class and contains two further Vectors: leftControlPoint and rightControlPoint. In order to define Bézier curves
-controlpoints are obligatory.
+In context of this library splines are simply lists of BezierVectors. A BezierVector extends the internal Vector class
+and contains two further Vectors: leftControlPoint and rightControlPoint. In order to define Bézier curves controlpoints
+are obligatory.
 
 ### Shapes
 
@@ -44,24 +44,49 @@ combination of a position vector, a direction vector and an up vector. It define
 Predefined Shapes can be found in the Shapes class:
 
 ```java
-Shapes.rectangle(pose,sizeX,sizeY);
-Shapes.circle(pose,radius);
-Shapes.star(pose,spikes,smoothing,innerRadius,outerRadius);
+public class Example {
+	Shapes.rectangle(pose,sizeX,sizeY);
+	Shapes.circle(pose,radius);
+	Shapes.star(pose,spikes,smoothing,innerRadius,outerRadius);
+}
 ```
 
 ### Registering the Library
 
-This library is meant to help with path creation in 3D space. This can for example be useful in minecraft development.
-Bukkits Vector/Location classes are needed to spawn particles on a curve. When instantiating the SplineLib class you can
-call the register() method and provide converters for internal vector classes and Bukkit's Vector class.
+This library is meant to help with path creation in 3D space. This can for example be useful in Minecraft development.
+Bukkits Vector/Location classes are necessary to spawn particles on a curve. The SplineLib class itself is abstract. You
+will need to implement methods for converting into an internal vector and back to your required vector class. Here is an
+example of doing this for the Minecraft Bukkit Vector class.
 
 ```java
-SplineLib<org.bukkit.util.Vector>splineLib = new SplineLib();
-splineLib.register(internalFromBukkitVector,internalToBukkitVector,bezierFromBukkitVector,bezierToBukkitVector);
+public class Example {
+  private final SplineLib<org.bukkit.util.Vector> bukkitSplineLib = new SplineLib<>() {
+    @Override
+    public Vector convertVector(org.bukkit.util.Vector value) {
+      return new Vector(value.getX(), value.getY(), value.getZ());
+    }
+
+    @Override
+    public org.bukkit.util.Vector convertVectorBack(Vector value) {
+      return new org.bukkit.util.Vector(value.getX(), value.getY(), value.getZ());
+    }
+
+    @Override
+    public BezierVector convertBezierVector(org.bukkit.util.Vector value) {
+      return new BezierVector(value.getX(), value.getY(), value.getZ(), null, null);
+    }
+
+    @Override
+    public org.bukkit.util.Vector convertBezierVectorBack(BezierVector value) {
+      return new org.bukkit.util.Vector(value.getX(), value.getY(), value.getZ());
+    }
+  };
+}
 ```
 
 Then you can use the splineLib object to instantiate CurveBuilder objects and to convert Curves to List<
-org.bukkit.util.Vector>
+org.bukkit.util.Vector>. You may consider using one SplineLib per world. This will allow you to instantiate/implement
+it as SplineLib<org.bukkit.Location> and to convert between Locations and internal Vectors directly.
 
 ### Builder
 
@@ -109,7 +134,7 @@ Setting a very low sample resolution before using space interpolators will lead 
 
 ![Sampling](images/interpolation_sampling.png)
 
-Spcaing interpolators can be defined by calling:
+Spacing interpolators can be defined by calling:
 ```java
 builder.withSpacingInterpolator(Interpolation.equidistantInterpolation(distance));
 ```
@@ -122,7 +147,7 @@ Angle | The angular interpolator sets points depending on the steepness of the c
 
 #### Closing the path
 
-If a curve is closed or not is defined by its spline. Shaped splines like those from Circles or Stars are closed by
+Whether a curve is closed or not is defined by its spline. Shaped splines like those from Circles or Stars are closed by
 default. New Splines are not closed by default and have to be closed with
 
 ```java

@@ -1,6 +1,7 @@
 package de.bossascrew.splinelib;
 
 import de.bossascrew.splinelib.interpolate.Interpolation;
+import de.bossascrew.splinelib.shape.Shapes;
 import de.bossascrew.splinelib.util.BezierVector;
 import de.bossascrew.splinelib.util.Curve;
 import de.bossascrew.splinelib.util.Pose;
@@ -12,34 +13,46 @@ public class Main {
 
 	public static void main(String[] args) {
 
+		SplineLib<org.bukkit.util.Vector> lib = new SplineLib<>() {
+			@Override
+			public Vector convertVector(org.bukkit.util.Vector value) {
+				return new Vector(value.getX(), value.getY(), value.getZ());
+			}
 
-		SplineLib<int[]> lib = new SplineLib<>();
-		lib.register(ints -> new Vector(ints[0], ints[1], ints[2]),
-				vector -> new int[]{(int) vector.getX(), (int) vector.getY(), (int) vector.getZ()},
-				ints -> new BezierVector(ints[0], ints[1], ints[2], null, null),
-				vector -> new int[]{(int) vector.getX(), (int) vector.getY(), (int) vector.getZ()});
+			@Override
+			public org.bukkit.util.Vector convertVectorBack(Vector value) {
+				return new org.bukkit.util.Vector(value.getX(), value.getY(), value.getZ());
+			}
 
-		Pose central = new Pose(new Vector(200, 200, 0), new Vector(1, 0, 0), new Vector(0, 0, 1));
+			@Override
+			public BezierVector convertBezierVector(org.bukkit.util.Vector value) {
+				return new BezierVector(value.getX(), value.getY(), value.getZ(), null, null);
+			}
 
-		CurveBuilder<int[]> builder = lib.newCurveBuilder(
-						new BezierVector(new Vector(100, 100, 0), null, null),
-						new BezierVector(new Vector(300, 200, 0), null, null),
-						new BezierVector(new Vector(100, 300, 0), null, null)
-				)
-				.withRoundingInterpolation(Interpolation.bezierInterpolation(15))
+			@Override
+			public org.bukkit.util.Vector convertBezierVectorBack(BezierVector value) {
+				return new org.bukkit.util.Vector(value.getX(), value.getY(), value.getZ());
+			}
+		};
+
+		Pose central = new Pose(new Vector(400, 400, 0), new Vector(1, 0, 0), new Vector(0, 0, 1));
+
+		CurveBuilder<org.bukkit.util.Vector> builder = lib.newCurveBuilder(Shapes.star(central, 8, 30, 0, 100, 300))
+				.withRoundingInterpolation(Interpolation.bezierInterpolation(8))
 				.withSpacingInterpolation(Interpolation.naturalInterpolation(12))
-				.withClosedPath(false);
+				.withClosedPath(true);
 
 		Curve curve = builder.build();
-		Screen screen = new Screen(200000, graphics -> {
 
-			//curve.rotate(new Vector(200, 200, 0), new Vector(0, 1, 0), 2);
+		Screen screen = new Screen(16, graphics -> {
+
+			curve.rotate(central.getPos(), new Vector(0, 1, 0), 2);
 			//curve.translate(Vector.Y.clone().multiply(0.1));
 
 			Graphics2D g2d = (Graphics2D) graphics;
 
 			g2d.setColor(new Color(255, 0, 0));
-			for (BezierVector p : builder.getSpline()) {
+			for (BezierVector p : builder.getSpline().rotate(central.getPos(), Vector.Y, 2)) {
 				if (p.getRightControlPoint() != null && p.getLeftControlPoint() != null) {
 
 					//linie
@@ -60,9 +73,9 @@ public class Main {
 
 			g2d.setColor(new Color(0, 0, 0));
 			for (Vector p : curve) {
-				double val = (p.getZ() + 200) / (double) 400;
-				int size = (int) (val * 7);
-				int col = (int) (val * 205 + 50);
+				double val = (p.getZ() + 400) / (double) 800;
+				int size = (int) (val * 12) + 1;
+				int col = (int) (val * 235 + 20);
 
 				size = Integer.min(Integer.max(1, size), 7);
 				col = Integer.min(Integer.max(0, col), 255);
