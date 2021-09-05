@@ -62,22 +62,22 @@ example of doing this for the Minecraft Bukkit Vector class.
 public class Example {
   private final SplineLib<org.bukkit.util.Vector> bukkitSplineLib = new SplineLib<>() {
     @Override
-    public Vector convertVector(org.bukkit.util.Vector value) {
+    public Vector convertToVector(org.bukkit.util.Vector value) {
       return new Vector(value.getX(), value.getY(), value.getZ());
     }
 
     @Override
-    public org.bukkit.util.Vector convertVectorBack(Vector value) {
+    public org.bukkit.util.Vector convertFromVector(Vector value) {
       return new org.bukkit.util.Vector(value.getX(), value.getY(), value.getZ());
     }
 
     @Override
-    public BezierVector convertBezierVector(org.bukkit.util.Vector value) {
+    public BezierVector convertToBezierVector(org.bukkit.util.Vector value) {
       return new BezierVector(value.getX(), value.getY(), value.getZ(), null, null);
     }
 
     @Override
-    public org.bukkit.util.Vector convertBezierVectorBack(BezierVector value) {
+    public org.bukkit.util.Vector convertFromBezierVector(BezierVector value) {
       return new org.bukkit.util.Vector(value.getX(), value.getY(), value.getZ());
     }
   };

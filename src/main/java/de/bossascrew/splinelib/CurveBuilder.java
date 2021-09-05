@@ -1,9 +1,7 @@
 package de.bossascrew.splinelib;
 
-import de.bossascrew.splinelib.interpolate.Interpolator;
 import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
 import de.bossascrew.splinelib.interpolate.SpacingInterpolator;
-import de.bossascrew.splinelib.phase.CurveBuilderPhase;
 import de.bossascrew.splinelib.phase.RoundingPhase;
 import de.bossascrew.splinelib.phase.SpacingPhase;
 import de.bossascrew.splinelib.shape.Shape;
@@ -105,6 +103,6 @@ public class CurveBuilder<V> {
 	}
 
 	public List<V> buildAndConvert() {
-		return build().stream().map(splineLib::convertVectorBack).toList();
+		return build().stream().map(splineLib::convertFromVector).toList();
 	}
 }

@@ -32,36 +32,36 @@ public abstract class SplineLib<V> {
 	}
 
 	public CurveBuilder<V> newCurveBuilderFrom(Collection<V> vectors) {
-		return new CurveBuilder<>(this, vectors.stream().map(this::convertBezierVector).toList());
+		return new CurveBuilder<>(this, vectors.stream().map(this::convertToBezierVector).toList());
 	}
 
 	@SafeVarargs
 	public final CurveBuilder<V> newCurveBuilderFrom(V... vectors) {
-		return new CurveBuilder<>(this, Arrays.stream(vectors).map(this::convertBezierVector).toList());
+		return new CurveBuilder<>(this, Arrays.stream(vectors).map(this::convertToBezierVector).toList());
 	}
 
-	public abstract Vector convertVector(V value);
+	public abstract Vector convertToVector(V value);
 
-	public abstract V convertVectorBack(Vector value);
+	public abstract V convertFromVector(Vector value);
 
-	public abstract BezierVector convertBezierVector(V value);
+	public abstract BezierVector convertToBezierVector(V value);
 
-	public abstract V convertBezierVectorBack(BezierVector value);
+	public abstract V convertFromBezierVector(BezierVector value);
 
 	public List<V> convert(Curve curve) {
-		return curve.stream().map(this::convertVectorBack).toList();
+		return curve.stream().map(this::convertFromVector).toList();
 	}
 
 	public List<V> convert(Spline spline) {
-		return spline.stream().map(this::convertBezierVectorBack).toList();
+		return spline.stream().map(this::convertFromBezierVector).toList();
 	}
 
 	public Curve newCurve(List<V> vectors) {
-		return vectors.stream().map(this::convertVector).collect(Collectors.toCollection(Curve::new));
+		return vectors.stream().map(this::convertToVector).collect(Collectors.toCollection(Curve::new));
 	}
 
 	public Spline newSpline(List<V> vectors) {
-		return vectors.stream().map(this::convertBezierVector).collect(Collectors.toCollection(Spline::new));
+		return vectors.stream().map(this::convertToBezierVector).collect(Collectors.toCollection(Spline::new));
 	}
 
 	public Vector newVector(double x, double y, double z) {
@@ -69,7 +69,7 @@ public abstract class SplineLib<V> {
 	}
 
 	public Vector newVector(V pos) {
-		return convertVector(pos);
+		return convertToVector(pos);
 	}
 
 	public BezierVector newBezierVector(V pos) {
@@ -77,19 +77,19 @@ public abstract class SplineLib<V> {
 	}
 
 	public BezierVector newBezierVector(V pos, @Nullable V left, @Nullable V right) {
-		return new BezierVector(convertVector(pos), left == null ? null : convertVector(left), right == null ? null : convertVector(right));
+		return new BezierVector(convertToVector(pos), left == null ? null : convertToVector(left), right == null ? null : convertToVector(right));
 	}
 
 	public Pose newPose(V pos, V dir, V up) {
-		return new Pose(convertVector(pos), convertVector(dir), convertVector(up));
+		return new Pose(convertToVector(pos), convertToVector(dir), convertToVector(up));
 	}
 
 	public Pose newPose(V pos, V dir) {
-		return newPose(convertVector(pos), convertVector(dir));
+		return newPose(convertToVector(pos), convertToVector(dir));
 	}
 
 	public Pose newPose(V pos) {
-		return newPose(convertVector(pos));
+		return newPose(convertToVector(pos));
 	}
 
 	public Pose newPose(Vector pos, Vector dir, Vector up) {
