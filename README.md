@@ -5,6 +5,20 @@ until release 1.0
 
 TODO erklärendes Bild
 
+## Contents
+- [Usage](#usage)
+  - [Splines and Terminology](#splines-and-terminology)
+  - [Shapes](#shapes)
+  - [Registering the Library](#registering-the-library)
+  - [Builder](#builder)
+    - [Instantiating](#instantiating)
+    - [Rounding Interpolator](#rounding-interpolator)
+    - [Spacing Interpolator](#spacing-interpolators)
+    - [Closing Splines](#closing-the-path)
+    - [Filters and Processors](#filters-and-processors)
+  - [Creating Phases](#)
+- [Examples](#)
+
 ## Usage
 
 ### Splines and Terminology
@@ -12,13 +26,15 @@ TODO erklärendes Bild
 The term "spline" is used to describe smoothing and interpolating functions. In this library, "spline" explicitly means
 curves that are defined by any amount of control points. So all those examples are splines:
 
-TODO images
+(white: curve points, red: bezier vectors, green: control points) 
+
+Circle | Star | Spline with Controlpoints | Spline without Controlpoints
+--- | --- | --- | ---
+![circle](images/example_circle.png) | ![star](images/example_star.png) | ![spline_cp](images/example_spline.png) | ![spline_ncp](images/example_spline2.png)
 
 In the context of this library splines are simply lists of BezierVectors. A BezierVector extends the internal Vector
 class and contains two further Vectors: leftControlPoint and rightControlPoint. In order to define Bézier curves
 controlpoints are obligatory.
-
-TODO image controlpoints
 
 ### Shapes
 

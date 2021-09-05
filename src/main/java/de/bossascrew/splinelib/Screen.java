@@ -9,9 +9,11 @@ import java.util.function.Consumer;
 
 public class Screen {
 
+	private final int updateDelay;
 	private final Consumer<Graphics> graphicsConsumer;
 
-	public Screen(Consumer<Graphics> graphicsConsumer) {
+	public Screen(int updateDelay, Consumer<Graphics> graphicsConsumer) {
+		this.updateDelay = updateDelay;
 		this.graphicsConsumer = graphicsConsumer;
 		buildScreen();
 	}
@@ -35,7 +37,7 @@ public class Screen {
 		ActionListener taskPerformer = e -> {
 			canvas.paintComponent(g);
 		};
-		new Timer(20, taskPerformer).start();
+		new Timer(updateDelay, taskPerformer).start();
 	}
 
 

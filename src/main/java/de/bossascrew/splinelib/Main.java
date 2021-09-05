@@ -1,7 +1,6 @@
 package de.bossascrew.splinelib;
 
 import de.bossascrew.splinelib.interpolate.Interpolation;
-import de.bossascrew.splinelib.shape.Shapes;
 import de.bossascrew.splinelib.util.BezierVector;
 import de.bossascrew.splinelib.util.Curve;
 import de.bossascrew.splinelib.util.Pose;
@@ -22,24 +21,42 @@ public class Main {
 
 		Pose central = new Pose(new Vector(200, 200, 0), new Vector(1, 0, 0), new Vector(0, 0, 1));
 
-		CurveBuilder<int[]> builder = lib.newCurveBuilder(Shapes.star(central, 5, 20, 90, 150))
-				.withRoundingInterpolation(Interpolation.bezierInterpolation(10))
-				.withSpacingInterpolation(Interpolation.naturalInterpolation(8))
-				.withClosedPath(true);
-
+		CurveBuilder<int[]> builder = lib.newCurveBuilder(
+						new BezierVector(new Vector(100, 100, 0), null, null),
+						new BezierVector(new Vector(300, 200, 0), null, null),
+						new BezierVector(new Vector(100, 300, 0), null, null)
+				)
+				.withRoundingInterpolation(Interpolation.bezierInterpolation(15))
+				.withSpacingInterpolation(Interpolation.naturalInterpolation(12))
+				.withClosedPath(false);
 
 		Curve curve = builder.build();
-		Screen screen = new Screen(graphics -> {
+		Screen screen = new Screen(200000, graphics -> {
 
-			curve.rotate(new Vector(200, 200, 0), new Vector(0, 1, 0), 2);
-			curve.translate(Vector.Y.clone().multiply(0.1));
+			//curve.rotate(new Vector(200, 200, 0), new Vector(0, 1, 0), 2);
+			//curve.translate(Vector.Y.clone().multiply(0.1));
 
 			Graphics2D g2d = (Graphics2D) graphics;
 
-			/*g2d.setColor(new Color(255, 0, 0));
-			for (Vector p : builder.getRoundedPath().keySet()) {
-				g2d.fillOval((int) p.getX() - 2, (int) p.getY() - 2, 5, 5);
-			}*/
+			g2d.setColor(new Color(255, 0, 0));
+			for (BezierVector p : builder.getSpline()) {
+				if (p.getRightControlPoint() != null && p.getLeftControlPoint() != null) {
+
+					//linie
+					g2d.setColor(new Color(0, 150, 0));
+					g2d.drawLine((int) p.getRightControlPoint().getX(), (int) p.getRightControlPoint().getY(),
+							(int) p.getLeftControlPoint().getX(), (int) p.getLeftControlPoint().getY());
+
+					//kontrollpunkte
+					g2d.setColor(new Color(0, 255, 0));
+					g2d.fillOval((int) p.getRightControlPoint().getX() - 2, (int) p.getRightControlPoint().getY() - 2, 5, 5);
+					g2d.fillOval((int) p.getLeftControlPoint().getX() - 2, (int) p.getLeftControlPoint().getY() - 2, 5, 5);
+				}
+
+				//Bezierpunkt
+				g2d.setColor(new Color(255, 0, 0));
+				g2d.fillOval((int) p.getX() - 3, (int) p.getY() - 3, 7, 7);
+			}
 
 			g2d.setColor(new Color(0, 0, 0));
 			for (Vector p : curve) {
@@ -50,8 +67,8 @@ public class Main {
 				size = Integer.min(Integer.max(1, size), 7);
 				col = Integer.min(Integer.max(0, col), 255);
 
-				g2d.setColor(new Color(col, col, col));
-				//g2d.setColor(Color.getHSBColor((float) points.indexOf(p) / points.size() * 255f, 1, 1));
+				g2d.setColor(new Color(255, 255, 255));
+				//g2d.setColor(new Color(col, col, col));
 				g2d.fillOval((int) p.getX() - 1, (int) p.getY() - 1, size, size);
 			}
 		});
