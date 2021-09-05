@@ -28,9 +28,11 @@ curves that are defined by any amount of control points. So all those examples a
 
 (white: curve points, red: bezier vectors, green: control points) 
 
-![circle](images/example_circle.png) | ![star](images/example_star.png) | ![spline_cp](images/example_spline.png) | ![spline_ncp](images/example_spline2.png)
---- | --- | --- | ---
-Circle | Star | Spline with Controlpoints | Spline without Controlpoints
+<img src="images/example_circle.png" width="22%">
+<img src="images/example_star.png" width="22%">
+<img src="images/example_spline.png" width="22%">
+<img src="images/example_spline2.png" width="22%">
+
 
 In the context of this library splines are simply lists of BezierVectors. A BezierVector extends the internal Vector
 class and contains two further Vectors: leftControlPoint and rightControlPoint. In order to define Bézier curves
@@ -121,7 +123,7 @@ Natural | The natural interpolator divides each segment (from one BezierVector t
 Equidistant | The equidistant interpolator sets every point with the provided distance to its neighbour points. | ![equidistant](images/interpolation_equidistant.png)
 Angle | The angular interpolator sets points depending on the steepness of the curve. a straight line will therefore only be visible as a start and end point. | ![angular](images/interpolation_angular.png)
 
-### Closing the path
+#### Closing the path
 
 If a curve is closed or not is defined by its spline. Shaped splines like those from Circles or Stars are closed by
 default. New Splines are not closed by default and have to be closed with
@@ -139,7 +141,7 @@ builder.withClosedPath(true);
 
 This will connect start and end point of the spline before interpolating anything.
 
-### Filters and Processors
+#### Filters and Processors
 
 For each interpolation phase you can provide a point filter. This allows you to filter sample points as well as final
 curve points. You can also use the processor to filter based on actual BezierVectors or if you want to rotate/mirror the
