@@ -28,9 +28,9 @@ curves that are defined by any amount of control points. So all those examples a
 
 (white: curve points, red: bezier vectors, green: control points) 
 
-Circle | Star | Spline with Controlpoints | Spline without Controlpoints
---- | --- | --- | ---
 ![circle](images/example_circle.png) | ![star](images/example_star.png) | ![spline_cp](images/example_spline.png) | ![spline_ncp](images/example_spline2.png)
+--- | --- | --- | ---
+Circle | Star | Spline with Controlpoints | Spline without Controlpoints
 
 In the context of this library splines are simply lists of BezierVectors. A BezierVector extends the internal Vector
 class and contains two further Vectors: leftControlPoint and rightControlPoint. In order to define Bézier curves
