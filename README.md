@@ -28,7 +28,7 @@ curves that are defined by any amount of control points. So all those examples a
 
 (white: curve points, red: bezier vectors, green: control points) 
 
-<img src="images/example_circle.png" width="22%"> <img src="images/example_star.png" width="22%"> <img src="images/example_spline.png" width="22%"> <img src="images/example_spline2.png" width="22%">
+<img src="images/example_circle.png" width="25%"> <img src="images/example_star.png" width="25%"> <img src="images/example_spline.png" width="25%"> <img src="images/example_spline2.png" width="25%">
 
 
 In the context of this library splines are simply lists of BezierVectors. A BezierVector extends the internal Vector
