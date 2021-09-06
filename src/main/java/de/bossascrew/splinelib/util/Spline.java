@@ -2,7 +2,6 @@ package de.bossascrew.splinelib.util;
 
 import lombok.Getter;
 import lombok.Setter;
-import de.bossascrew.splinelib.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +19,14 @@ public class Spline extends Transformable<BezierVector, Vector> {
 
 	public Spline(Collection<BezierVector> vectors) {
 		this.addAll(vectors);
+	}
+
+	@Override
+	public BezierVector get(int index) {
+		if (closed && index >= size()) {
+			index = index % size();
+		}
+		return super.get(index);
 	}
 
 	@Override

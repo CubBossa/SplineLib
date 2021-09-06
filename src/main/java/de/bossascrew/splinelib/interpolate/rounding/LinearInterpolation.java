@@ -31,7 +31,7 @@ public class LinearInterpolation implements RoundingInterpolator<List<BezierVect
 
 		for (int i = 0; i < points.size() + (closedPath ? 0 : -1); i++) {
 			BezierVector left = points.get(i);
-			BezierVector right = points.get(closedPath && i == points.size() - 1 ? 0 : i + 1);
+			BezierVector right = points.get(i + 1);
 			Vector dir = right.clone().subtract(left);
 
 			Curve innerResult = new Curve();

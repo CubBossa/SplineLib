@@ -30,7 +30,7 @@ public class LeashInterpolation implements RoundingInterpolator<Spline, Map<Bezi
 
 		for (int i = 0; i < points.size() + (closedPath ? 0 : -1); i++) {
 			BezierVector a = points.get(i);
-			BezierVector b = points.get(i == points.size() - 1 ? 0 : i + 1);
+			BezierVector b = points.get(i + 1);
 
 			result.put(a, getParabolaPoints(a, b));
 		}

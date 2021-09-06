@@ -31,7 +31,7 @@ public class BezierInterpolation implements RoundingInterpolator<Spline, Map<Bez
 		for (int i = 0; i < points.size() + (closedPath ? 0 : -1); i++) {
 			Curve innerResult;
 			BezierVector pointA = points.get(i);
-			BezierVector pointB = points.get(closedPath && i == points.size() - 1 ? 0 : i + 1);
+			BezierVector pointB = points.get(i + 1);
 
 			if (pointA.getRightControlPoint() == null) {
 				if (pointB.getLeftControlPoint() == null) {
