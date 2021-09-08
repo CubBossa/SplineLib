@@ -6,6 +6,9 @@ import de.bossascrew.splinelib.util.BezierVector;
 import de.bossascrew.splinelib.util.Curve;
 import de.bossascrew.splinelib.util.Pose;
 import de.bossascrew.splinelib.util.Vector;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.entity.Player;
 
 import java.awt.*;
 
@@ -39,14 +42,14 @@ public class Main {
 
 		CurveBuilder<org.bukkit.util.Vector> builder = lib.newCurveBuilder(Shapes.star(central, 4, 30, -200, 100, 300))
 				.withRoundingInterpolation(Interpolation.bezierInterpolation(8))
-				.withSpacingInterpolation(Interpolation.naturalInterpolation(12))
+				.withSpacingInterpolation(Interpolation.equidistantInterpolation(0.3))
 				.withClosedPath(true);
 
 		Curve curve = builder.build();
 
 		Screen screen = new Screen(16, graphics -> {
 
-			//curve.rotate(central.getPos(), new Vector(0, 1, 0), 2);
+			curve.rotate(central.getPos(), new Vector(0, 1, 0), 2);
 			//curve.translate(Vector.Y.clone().multiply(0.1));
 
 			Graphics2D g2d = (Graphics2D) graphics;
@@ -80,8 +83,8 @@ public class Main {
 				size = Integer.min(Integer.max(1, size), 7);
 				col = Integer.min(Integer.max(0, col), 255);
 
-				g2d.setColor(new Color(255, 255, 255));
-				//g2d.setColor(new Color(col, col, col));
+				//g2d.setColor(new Color(255, 255, 255));
+				g2d.setColor(new Color(col, col, col));
 				g2d.fillOval((int) p.getX() - 1, (int) p.getY() - 1, size, size);
 			}
 		});

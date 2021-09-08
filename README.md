@@ -168,8 +168,99 @@ This will connect start and end point of the spline before interpolating anythin
 For each interpolation phase you can provide a point filter. This allows you to filter sample points as well as final
 curve points. You can also use the processor to filter based on actual BezierVectors or if you want to rotate/mirror the
 curve between interpolations.
+
 ```java
 builder
-        .withSpacingFilter(vector -> vector.getY() < 100);
-        .withSpacingProcessor(curve -> curve.mirror(...));
+        .withSpacingFilter(vector->vector.getY()< 100);
+        .withSpacingProcessor(curve->curve.mirror(...));
 ```
+
+## Examples
+
+### Minecraft Movement Path
+
+In this example I will show how to use this library to visualize a players movement as a smoothed path. Some parts will
+be simplyfied but you will get the idea.
+
+First I will create a splinelib for this purpose. To keep things simple i will assume this will all happen in the same
+world: world.
+
+```java
+public class PlayerTrack {
+
+  private final World world;
+  private final SplineLib<org.bukkit.util.Vector> bukkitSplineLib = new SplineLib<>() {
+    @Override
+    public Vector convertToVector(Location value) {
+      return new Vector(value.getX(), value.getY(), value.getZ());
+    }
+
+    @Override
+    public Location convertFromVector(Vector value) {
+      return new Location(world, value.getX(), value.getY(), value.getZ());
+    }
+
+    @Override
+    public BezierVector convertToBezierVector(Location value) {
+      Vector dir = value.getDirection().normalize();
+      Vector left = value.clone().subtract(dir);
+      Vector right = value.clone().add(dir);
+      return new BezierVector(value.getX(), value.getY(), value.getZ(), left, right);
+    }
+
+    @Override
+    public Location convertFromBezierVector(BezierVector value) {
+      Location location = new Location(world, value.getX(), value.getY(), value.getZ());
+      location.setDirection(value.getRightControlPoint().clone().subtract(location.toVector()));
+    }
+  };
+}
+```
+
+To record a players movement you can run the following code either depending on the players movement or
+in a repeating task:
+```java
+public class PlayerTrack implements Listener {
+  private final Spline spline;
+
+  public PlayerTrack() {
+    bukkitSplineLib.newSpline();
+  }
+
+  @EventHandler
+  public void onMove(PlayerMoveEvent event) {
+    Player player = event.getPlayer();
+    //filter conditions
+
+    //convert location to bezier vector
+    spline.add(bukkitSplineLib.convertToBezierVector(player.getLocation()));
+  }
+}
+```
+Now you can display the Spline by converting it into a List of Locations:
+```java
+public class PlayerTrack {
+  private final Spline spline;
+
+  public void displaySpline(Player player) {
+
+    //don't call this many times if the spline does not change- cache the result 
+    //instead if you want to respawn the particles with a repeating task
+    List<Location> locations = bukkitSplineLib.newSplineBuilder(spline)
+            .withRoundingInterpolation(Interpolation.bezierInterpolation(8))
+            .withSpacingInterpolation(Interpolation.equidistantInterpolation(0.3))
+            .buildAndConvert();
+
+    for (Location location : locations) {
+      player.spawnParticle(Particle.FLAME, location, 1);
+    }
+  }
+}
+```
+If you don't want to interpolate a spline every view ticks but still want to respawn
+particles at the players location you may want to build it as Curve object and move
+it by using the `translate(vectorToNewLocation)`. Then you can convert
+the Curve by using `splineLib.convert(curve)`
+
+
+
