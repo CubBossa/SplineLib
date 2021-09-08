@@ -203,8 +203,8 @@ public class PlayerTrack {
     @Override
     public BezierVector convertToBezierVector(Location value) {
       Vector dir = value.getDirection().normalize();
-      Vector left = value.clone().subtract(dir);
-      Vector right = value.clone().add(dir);
+      Vector left = value.toVector().subtract(dir);
+      Vector right = value.toVector().add(dir);
       return new BezierVector(value.getX(), value.getY(), value.getZ(), left, right);
     }
 
@@ -230,8 +230,11 @@ public class PlayerTrack implements Listener {
   @EventHandler
   public void onMove(PlayerMoveEvent event) {
     Player player = event.getPlayer();
-    //filter conditions
-
+    //add filter conditions here. The converter sets the control points
+    //with a distance of 1. Create new points on the spline
+    //with a distance of around 3 blocks to achieve smooth paths.
+    //or change the control point distance in the converter.
+    
     //convert location to bezier vector
     spline.add(bukkitSplineLib.convertToBezierVector(player.getLocation()));
   }
