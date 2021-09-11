@@ -28,7 +28,7 @@ public class Rectangle implements Shape {
 		Vector a = pose.getDir().clone().normalize().multiply(sizeX / 2);
 		Vector b = pose.getDir().crossProduct(pose.getUp()).clone().normalize().multiply(sizeY / 2);
 
-		Spline result = new Spline();
+		Spline result = new Spline(pose);
 		result.setClosed(true);
 		result.add(new BezierVector(base.clone().add(a).add(b), null, null));
 		result.add(new BezierVector(base.clone().add(a).subtract(b), null, null));

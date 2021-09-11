@@ -16,8 +16,8 @@ TODO erklärendes Bild
     - [Spacing Interpolator](#spacing-interpolators)
     - [Closing Splines](#closing-the-path)
     - [Filters and Processors](#filters-and-processors)
-  - [Creating Phases](#)
-- [Examples](#)
+  - [Creating Phases](#creating-phases)
+- [Examples](#examples)
 
 ## Usage
 
@@ -175,6 +175,10 @@ builder
         .withSpacingProcessor(curve->curve.mirror(...));
 ```
 
+### Creating Phases
+
+TODO
+
 ## Examples
 
 ### Minecraft Movement Path
@@ -182,14 +186,14 @@ builder
 In this example I will show how to use this library to visualize a players movement as a smoothed path. Some parts will
 be simplyfied but you will get the idea.
 
-First I will create a splinelib for this purpose. To keep things simple i will assume this will all happen in the same
-world: world.
+First I will create a splinelib for this purpose. To keep things simple I will assume this all happens in the same
+world: `world`.
 
 ```java
 public class PlayerTrack {
 
-  private final World world;
-  private final SplineLib<org.bukkit.util.Vector> bukkitSplineLib = new SplineLib<>() {
+  World world; //initialize it somewhere
+  SplineLib<Location> bukkitSplineLib = new SplineLib<>() {
     @Override
     public Vector convertToVector(Location value) {
       return new Vector(value.getX(), value.getY(), value.getZ());
@@ -202,16 +206,19 @@ public class PlayerTrack {
 
     @Override
     public BezierVector convertToBezierVector(Location value) {
-      Vector dir = value.getDirection().normalize();
-      Vector left = value.toVector().subtract(dir);
-      Vector right = value.toVector().add(dir);
-      return new BezierVector(value.getX(), value.getY(), value.getZ(), left, right);
+      org.bukkit.util.Vector dir = value.getDirection().normalize();
+      org.bukkit.util.Vector left = value.toVector().subtract(dir);
+      org.bukkit.util.Vector right = value.toVector().add(dir);
+      return new BezierVector(value.getX(), value.getY(), value.getZ(),
+              new Vector(left.getX(), left.getY(), left.getZ()),
+              new Vector(right.getX(), right.getY(), right.getZ()));
     }
 
     @Override
     public Location convertFromBezierVector(BezierVector value) {
       Location location = new Location(world, value.getX(), value.getY(), value.getZ());
-      location.setDirection(value.getRightControlPoint().clone().subtract(location.toVector()));
+      location.setDirection(convertFromVector(value.getRightControlPoint().clone().subtract(value)).toVector());
+      return location;
     }
   };
 }
@@ -219,51 +226,126 @@ public class PlayerTrack {
 
 To record a players movement you can run the following code either depending on the players movement or
 in a repeating task:
+
 ```java
-public class PlayerTrack implements Listener {
-  private final Spline spline;
+import org.bukkit.entity.Player;
 
-  public PlayerTrack() {
-    bukkitSplineLib.newSpline();
-  }
+public class PlayerTrack {
+  private final Spline spline = bukkitSplineLib.newSpline();
 
-  @EventHandler
-  public void onMove(PlayerMoveEvent event) {
-    Player player = event.getPlayer();
-    //add filter conditions here. The converter sets the control points
-    //with a distance of 1. Create new points on the spline
-    //with a distance of around 3 blocks to achieve smooth paths.
-    //or change the control point distance in the converter.
-    
+  //Call under certain conditions. The converter sets the control points
+  //with a distance of 1. Create new points on the spline
+  //with a distance of around 3-5 blocks to achieve smooth paths.
+  //or change the control point distance in the converter.
+  public void recordLocation(Player player) {
+
     //convert location to bezier vector
-    spline.add(bukkitSplineLib.convertToBezierVector(player.getLocation()));
+    //it uses eyelocation because we track the facing direction by converting.
+    //The result will represent the players view like a camera path.
+    spline.add(bukkitSplineLib.convertToBezierVector(player.getEyeLocation()));
   }
 }
 ```
 Now you can display the Spline by converting it into a List of Locations:
+
 ```java
 public class PlayerTrack {
-  private final Spline spline;
+  private final Spline spline = bukkitSplineLib.newSpline();
 
   public void displaySpline(Player player) {
 
-    //don't call this many times if the spline does not change- cache the result 
+    //don't call this many times if the spline does not change - cache the result 
     //instead if you want to respawn the particles with a repeating task
     List<Location> locations = bukkitSplineLib.newSplineBuilder(spline)
-            .withRoundingInterpolation(Interpolation.bezierInterpolation(8))
+            //using 15 samples per ~3 blocks
+            .withRoundingInterpolation(Interpolation.bezierInterpolation(15))
+            //setting distance of final locations to 0.3 blocks
             .withSpacingInterpolation(Interpolation.equidistantInterpolation(0.3))
+            //convert to List<Location> directly
             .buildAndConvert();
 
+    //do this as a repeating task or cache the locations List if you want to summon the
+    //spline particles only at some certain conditions.
     for (Location location : locations) {
       player.spawnParticle(Particle.FLAME, location, 1);
     }
   }
 }
 ```
-If you don't want to interpolate a spline every view ticks but still want to respawn
-particles at the players location you may want to build it as Curve object and move
-it by using the `translate(vectorToNewLocation)`. Then you can convert
-the Curve by using `splineLib.convert(curve)`
+
+If you don't want to interpolate a spline every view ticks but still want to respawn particles at the players location
+you may want to build it as Curve object (`.build()`) and move it by using the `translate(vectorToNewLocation)`. Then
+you can convert the Curve by using `List<Location> locations = bukkitSplineLib.convert(curve);`
 
 
 
+### Minecraft Heart Above Players
+
+In this example, a heart will appear above a player and will follow him.
+We will therefore use the bukkitSplineLib of the example above.
+
+What we want to achieve:
+- If a player joins, a heart will be placed above his head.
+- It will follow the player for 20 seconds and then disappears.
+- It will be updated twice per second.
+- The heart will adjust its direction based on the players pitch.
+
+We will need a spline lib and a listener. Also, we need a repeating task to display
+the particles twice per second.
+````java
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+
+public class Hearts implements Listener {
+  SplineLib<Location> splineLib = ...;
+  private int taskId = 0;
+  
+  public Hearts() {
+  	startTimer();
+  }
+  
+  @EventHandler
+  public void onJoin(PlayerJoinEvent event) {
+    Player player = event.getPlayer();
+    //create Curve and store it    
+  }
+  
+  public void startTimer() {
+    Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+        //display particles for all players;
+    }, 0, 10);
+  }
+}
+````
+
+Now we want to create a Heart and store it in a Map:
+
+````java
+import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+
+public class Hearts implements Listener {
+
+  Map<Player, Curve> playerHeartMap = new HashMap<>();
+
+  @EventHandler
+  public void onJoin(PlayerJoinEvent event) {
+    Player player = event.getPlayer();
+
+    //create a Pose for the heart to occur (3 blocks above player)
+    Pose pose = splineLib.newPose(player.getLocation(), player.getLocation().getDirection());
+
+    //create the heart curve
+    Curve curve = splineLib.newSplineBuilder(Shapes.heart(pose, /*size*/ 2, /*smoothness*/ 0.5))
+            .withRoundingInterpolation(Interpolation.bezierInterpolation(10))
+            .withSpacingInterpolation(Interpolation.equidistantInterpolation(0.2))
+            .build();
+
+    //store the curve into
+    playerHeartMap.put(player, curve);
+  }
+}
+````

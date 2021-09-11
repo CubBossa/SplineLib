@@ -29,7 +29,7 @@ public class Oval implements Shape {
 		Vector d = pose.getDir().clone().normalize();
 		Vector r = d.clone().crossProduct(pose.getUp()).normalize();
 
-		Spline result = new Spline();
+		Spline result = new Spline(pose);
 		result.setClosed(true);
 
 		Vector vUpper = b.clone().add(d.clone().multiply(radius));

@@ -4,12 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class Vector implements Cloneable {
 
-	public static final Vector ZERO = new Vector(0, 0, 0);
-	public static final Vector ONE = new Vector(1, 1, 1);
-	public static final Vector X = new Vector(1, 0, 0);
-	public static final Vector Y = new Vector(0, 1, 0);
-	public static final Vector Z = new Vector(0, 0, 1);
-
 	private static final double epsilon = 1.0E-6D;
 	protected double x;
 	protected double y;
@@ -61,6 +55,11 @@ public class Vector implements Cloneable {
 		this.y *= vec.y;
 		this.z *= vec.z;
 		return this;
+	}
+
+	@NotNull
+	public Matrix multiply(@NotNull Matrix matrix) {
+		return this.toMatrix().multiply(matrix);
 	}
 
 	@NotNull
@@ -173,11 +172,8 @@ public class Vector implements Cloneable {
 	}
 
 	@NotNull
-	public Vector zero() {
-		this.x = 0.0D;
-		this.y = 0.0D;
-		this.z = 0.0D;
-		return this;
+	public static Vector zero() {
+		return new Vector(0, 0, 0);
 	}
 
 	@NotNull
@@ -354,6 +350,23 @@ public class Vector implements Cloneable {
 		return this.x + "," + this.y + "," + this.z;
 	}
 
+	public Matrix toMatrix() {
+		Matrix m = new Matrix(3, 1);
+		m.getData()[0][0] = x;
+		m.getData()[1][0] = y;
+		m.getData()[2][0] = z;
+		return m;
+	}
+
+	public Matrix toMatrix4() {
+		Matrix m = new Matrix(4, 1);
+		m.getData()[0][0] = x;
+		m.getData()[1][0] = y;
+		m.getData()[2][0] = z;
+		m.getData()[3][0] = 1;
+		return m;
+	}
+
 	public static double getEpsilon() {
 		return epsilon;
 	}
@@ -366,5 +379,21 @@ public class Vector implements Cloneable {
 	@NotNull
 	public static Vector getMaximum(@NotNull Vector v1, @NotNull Vector v2) {
 		return new Vector(Math.max(v1.x, v2.x), Math.max(v1.y, v2.y), Math.max(v1.z, v2.z));
+	}
+
+	public static Vector one() {
+		return new Vector(1, 1, 1);
+	}
+
+	public static Vector x() {
+		return new Vector(1, 0, 0);
+	}
+
+	public static Vector y() {
+		return new Vector(0, 1, 0);
+	}
+
+	public static Vector z() {
+		return new Vector(0, 0, 1);
 	}
 }

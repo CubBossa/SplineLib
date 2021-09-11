@@ -41,12 +41,12 @@ public class Star implements Shape {
 	@Override
 	public Spline getSpline() {
 
-		Spline result = new Spline();
+		Spline result = new Spline(pose);
 		result.setClosed(true);
 		Vector base = pose.getPos();
 
-		Vector a = pose.getDir().clone().normalize();
-		Vector b = a.clone().crossProduct(pose.getUp()).normalize();
+		Vector a = pose.getRight();
+		Vector b = pose.getUp();
 
 		Vector aInner = a.clone().multiply(innerRadius);
 		Vector bInner = b.clone().multiply(innerRadius);
@@ -62,8 +62,8 @@ public class Star implements Shape {
 			Vector outerDir = aOuter.clone().multiply(Math.sin(degree)).add(bOuter.clone().multiply(Math.cos(degree)));
 			Vector outer = base.clone().add(outerDir);
 
-			Vector innerRight = innerDir.crossProduct(pose.getUp()).normalize().multiply(innerRoundness);
-			Vector outerRight = outerDir.crossProduct(pose.getUp()).normalize().multiply(outerRoundness);
+			Vector innerRight = innerDir.crossProduct(pose.getDir()).normalize().multiply(innerRoundness);
+			Vector outerRight = outerDir.crossProduct(pose.getDir()).normalize().multiply(outerRoundness);
 
 			result.add(new BezierVector(inner, inner.clone().add(innerRight), inner.clone().subtract(innerRight)));
 			result.add(new BezierVector(outer, outer.clone().add(outerRight), outer.clone().subtract(outerRight)));

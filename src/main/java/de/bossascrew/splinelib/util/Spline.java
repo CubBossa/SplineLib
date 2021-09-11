@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Spline extends Transformable<BezierVector, Vector> {
+public class Spline extends TransformableList<BezierVector, Vector> {
 
 	private boolean closed;
 
@@ -18,7 +18,15 @@ public class Spline extends Transformable<BezierVector, Vector> {
 	}
 
 	public Spline(Collection<BezierVector> vectors) {
-		this.addAll(vectors);
+		super(vectors);
+	}
+
+	public Spline(Pose startPose) {
+		super(startPose);
+	}
+
+	public Spline(Pose startPose, Collection<BezierVector> vectors) {
+		super(startPose, vectors);
 	}
 
 	@Override

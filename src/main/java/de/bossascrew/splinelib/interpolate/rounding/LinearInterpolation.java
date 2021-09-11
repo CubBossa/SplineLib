@@ -3,13 +3,14 @@ package de.bossascrew.splinelib.interpolate.rounding;
 import de.bossascrew.splinelib.interpolate.RoundingInterpolator;
 import de.bossascrew.splinelib.util.BezierVector;
 import de.bossascrew.splinelib.util.Curve;
+import de.bossascrew.splinelib.util.Spline;
 import de.bossascrew.splinelib.util.Vector;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LinearInterpolation implements RoundingInterpolator<List<BezierVector>, Map<BezierVector, Curve>> {
+public class LinearInterpolation implements RoundingInterpolator<Spline, Map<BezierVector, Curve>> {
 
 	private final double distance;
 
@@ -23,7 +24,7 @@ public class LinearInterpolation implements RoundingInterpolator<List<BezierVect
 	}
 
 	@Override
-	public Map<BezierVector, Curve> interpolate(List<BezierVector> points, boolean closedPath) {
+	public Map<BezierVector, Curve> interpolate(Spline points, boolean closedPath) {
 		Map<BezierVector, Curve> result = new LinkedHashMap<>();
 		if (points.isEmpty()) {
 			return result;

@@ -97,10 +97,10 @@ public abstract class SplineLib<V> {
 	}
 
 	public Pose newPose(Vector pos, Vector dir) {
-		return new Pose(pos, dir, Vector.Y);
+		return new Pose(pos, dir, Vector.y());
 	}
 
 	public Pose newPose(Vector pos) {
-		return new Pose(pos, Vector.Z, Vector.Y);
+		return new Pose(pos, Vector.z(), Vector.y());
 	}
 }
