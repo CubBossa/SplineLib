@@ -2,7 +2,6 @@ package de.cubbossa.splinelib;
 
 import de.cubbossa.splinelib.interpolate.Interpolation;
 import de.cubbossa.splinelib.shape.Shapes;
-import de.bossascrew.splinelib.util.*;
 import de.cubbossa.splinelib.util.*;
 
 import java.awt.*;
