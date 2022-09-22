@@ -24,7 +24,7 @@ jobs:
     - name: Nexus Repo Publish
       uses: sonatype-nexus-community/nexus-repo-github-action@master
       with:
-        serverUrl: http://163c6cdd.ngrok.io
+        serverUrl: http://leonardbausenwein.de
         username: admin
         password: ${{ secrets.NEXUS_PASSWORD }}
         format: maven2
