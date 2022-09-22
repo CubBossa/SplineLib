@@ -1,7 +1,6 @@
 package de.cubbossa.splinelib;
 
 import de.cubbossa.splinelib.shape.Shape;
-import de.bossascrew.splinelib.util.*;
 import de.cubbossa.splinelib.util.*;
 import lombok.Getter;
 import lombok.Setter;
