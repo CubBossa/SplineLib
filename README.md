@@ -95,7 +95,7 @@ it as SplineLib<org.bukkit.Location> and to convert between Locations and intern
 The basic way to get a list of vectors from a spline is by using the CurveBuider class. It accepts different parameters
 like vectors, splines and shapes (Presets in Shapes class) and can be instantiated by calling
 
-```java
+```JAVA
 splineLib.newCurveBuilder(Shapes.star(pose,spikes,smoothing,innerRadius,outerRadius))
 ```
 
